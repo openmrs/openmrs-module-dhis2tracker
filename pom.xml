@@ -21,7 +21,7 @@
 	<packaging>pom</packaging>
 	<name>Dhis2 Tracker Module</name>
 	<description>
-        Provides functionality for submitting case reports data for patients to DHIS2 tracker
+        Provides functionality for submitting case report data for patients to DHIS2 tracker
     </description>
 	<url>https://wiki.openmrs.org/x/IxXfBQ</url>
 	

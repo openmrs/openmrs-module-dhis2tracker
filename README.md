@@ -1,5 +1,5 @@
 # Dhis2 Tracker
-Provides functionality for submitting case reports data for patients to DHIS2 tracker.
+Provides functionality for submitting case report data for patients to DHIS2 tracker.
 
 #### Table of Contents
 
