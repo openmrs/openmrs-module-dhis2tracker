@@ -9,8 +9,11 @@
  */
 package org.openmrs.module.dhis2tracker.api;
 
+import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Contains tests for CaseReportService
@@ -19,4 +22,9 @@ public class Dhis2TrackerServiceTest extends BaseModuleContextSensitiveTest {
 
     @Autowired
     private Dhis2TrackerService service;
+
+    @Test
+    public void setup() {
+        assertNotNull(service);
+    }
 }

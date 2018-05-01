@@ -26,4 +26,7 @@ public class Dhis2TrackerServiceImpl extends BaseOpenmrsService implements Dhis2
 
     private Dhis2TrackerDAO dao;
 
+    public void setDao(Dhis2TrackerDAO dao) {
+        this.dao = dao;
+    }
 }
