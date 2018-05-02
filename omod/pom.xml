@@ -25,7 +25,7 @@
 	<artifactId>dhis2tracker-omod</artifactId>
 	<packaging>jar</packaging>
 	<name>Dhis2 Tracker Module OMOD</name>
-	<description>OMOD project for dhis2tracker</description>
+	<description>OMOD project for Dhis2 Tracker</description>
 
 	<dependencies>
 
@@ -77,8 +77,6 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>${wiremockVersion}</version>
-            <scope>test</scope>
         </dependency>
 
 	</dependencies>
