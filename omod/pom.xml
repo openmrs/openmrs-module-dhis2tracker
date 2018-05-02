@@ -75,6 +75,11 @@
 		</dependency>
 
         <dependency>
+            <groupId>org.openmrs</groupId>
+            <artifactId>event-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
         </dependency>
