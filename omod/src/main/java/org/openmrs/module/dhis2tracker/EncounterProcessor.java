@@ -24,8 +24,17 @@ public class EncounterProcessor {
         return new EncounterProcessor();
     }
 
+    /**
+     * Processes the specified encounter
+     *
+     * @param encounter the encounter to process
+     * @return true if the encounter was processed otherwise false
+     */
     public boolean process(Encounter encounter) {
         log.debug("Processing encounter");
+        //Check if patient has a dhis2 identifier
+        //If the don't register and enroll
+        //Otherwise enroll or post event
         return true;
     }
 
