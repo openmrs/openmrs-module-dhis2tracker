@@ -13,11 +13,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 
-public class WebUtil {
+public class EncounterProcessor {
 
-    protected static final Log log = LogFactory.getLog(WebUtil.class);
+    protected static final Log log = LogFactory.getLog(EncounterProcessor.class);
 
-    public static boolean processEncounter(Encounter encounter) {
+    private EncounterProcessor() {
+    }
+
+    public static EncounterProcessor newInstance() {
+        return new EncounterProcessor();
+    }
+
+    public boolean process(Encounter encounter) {
         log.debug("Processing encounter");
         return true;
     }

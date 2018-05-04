@@ -32,7 +32,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Context.class, WebUtil.class})
+@PrepareForTest({Context.class, EncounterProcessor.class})
 public class CaseReportEventListenerTest {
 
     @Mock
@@ -43,8 +43,8 @@ public class CaseReportEventListenerTest {
     @Before
     public void before() throws IOException {
         PowerMockito.mockStatic(Context.class);
-        PowerMockito.mockStatic(WebUtil.class);
-        when(WebUtil.processEncounter(any(Encounter.class))).thenReturn(true);
+        PowerMockito.mockStatic(EncounterProcessor.class);
+        when(EncounterProcessor.processEncounter(any(Encounter.class))).thenReturn(true);
     }
 
     @Test
