@@ -9,8 +9,8 @@
  */
 package org.openmrs.module.dhis2tracker.api;
 
-import org.openmrs.module.BaseModuleActivator;
+public class Dhis2TrackerConstants {
 
-public class Dhis2TrackerActivator extends BaseModuleActivator {
+    public static final String LOINC_CODE_CASE_REPORT = "55751-2";
 
 }

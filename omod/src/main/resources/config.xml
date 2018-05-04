@@ -23,11 +23,12 @@
 	<description>${project.parent.description}</description>
 	<updateURL>https://modules.openmrs.org/modules/download/${project.parent.artifactId}/update.rdf</updateURL>
 	<require_version>${openMRSVersion}</require_version>
-	<!-- / Module Properties -->
 
 	
 	<!-- Required Modules -->
-	<!-- / Required Modules -->
+    <require_modules>
+        <require_module version="${eventVersion}">${project.parent.groupId}.${project.parent.artifactId}</require_module>
+    </require_modules>
 	
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.Dhis2TrackerActivator</activator>
@@ -49,7 +50,6 @@
 		<lang>es</lang>
 		<file>messages_es.properties</file>
 	</messages>
-	<!-- /Internationalization -->
 
     <!-- GPs -->
 

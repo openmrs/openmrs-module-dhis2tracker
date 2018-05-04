@@ -51,7 +51,9 @@
         <javaCompilerVersion>1.6</javaCompilerVersion>
 		<openMRSVersion>1.11.5</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <eventVersion>2.5</eventVersion>
+        <eventVersion>2.6.0</eventVersion>
+        <geronomicsVersion>1.1.1</geronomicsVersion>
+        <httpClientVersion>4.5.5</httpClientVersion>
         <wiremockVersion>2.5.1</wiremockVersion>
 	</properties>
 
@@ -99,6 +101,19 @@
                 <groupId>org.openmrs</groupId>
                 <artifactId>event-api</artifactId>
                 <version>${eventVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpClientVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${geronomicsVersion}</version>
                 <scope>provided</scope>
             </dependency>
 
