@@ -38,13 +38,17 @@ public class CaseReportEventListenerTest {
     @Mock
     private EncounterService es;
 
+    @Mock
+    private EncounterProcessor ep;
+
     private CaseReportEventListener listener = new CaseReportEventListener(null);
 
     @Before
     public void before() throws IOException {
         PowerMockito.mockStatic(Context.class);
         PowerMockito.mockStatic(EncounterProcessor.class);
-        when(EncounterProcessor.processEncounter(any(Encounter.class))).thenReturn(true);
+        when(EncounterProcessor.newInstance()).thenReturn(ep);
+        when(ep.process(any(Encounter.class))).thenReturn(true);
     }
 
     @Test
