@@ -16,7 +16,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
-import org.openmrs.module.dhis2tracker.api.Dhis2TrackerConstants;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;

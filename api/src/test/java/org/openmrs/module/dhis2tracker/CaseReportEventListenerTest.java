@@ -20,7 +20,6 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.dhis2tracker.api.Dhis2TrackerConstants;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

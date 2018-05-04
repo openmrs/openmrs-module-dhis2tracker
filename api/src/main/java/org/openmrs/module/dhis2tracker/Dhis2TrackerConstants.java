@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dhis2tracker.api;
+package org.openmrs.module.dhis2tracker;
 
 public class Dhis2TrackerConstants {
 
