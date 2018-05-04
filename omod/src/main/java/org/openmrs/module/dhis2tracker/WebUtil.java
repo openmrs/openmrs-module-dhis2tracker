@@ -13,9 +13,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 
-public class Dhis2TrackerWebUtil {
+public class WebUtil {
 
-    protected static final Log log = LogFactory.getLog(Dhis2TrackerWebUtil.class);
+    protected static final Log log = LogFactory.getLog(WebUtil.class);
 
     public static boolean processEncounter(Encounter encounter) {
         log.debug("Processing encounter");

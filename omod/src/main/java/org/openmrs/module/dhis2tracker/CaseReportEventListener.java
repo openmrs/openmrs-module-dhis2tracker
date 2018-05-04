@@ -78,7 +78,7 @@ public class CaseReportEventListener implements EventListener {
         String encUuid = mm.getString("uuid");
         Encounter encounter = Context.getEncounterService().getEncounterByUuid(encUuid);
         if (Dhis2TrackerConstants.LOINC_CODE_CASE_REPORT.equals(encounter.getEncounterType().getName())) {
-            return Dhis2TrackerWebUtil.processEncounter(encounter);
+            return WebUtil.processEncounter(encounter);
         }
 
         return false;
