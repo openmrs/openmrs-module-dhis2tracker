@@ -17,12 +17,10 @@ import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.dhis2tracker.api.Dhis2TrackerConstants;
-import org.openmrs.module.dhis2tracker.web.Dhis2HttpClient;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
-import java.io.IOException;
 
 
 public class CaseReportEventListener implements EventListener {
@@ -67,12 +65,20 @@ public class CaseReportEventListener implements EventListener {
 
     }
 
-    public boolean processMessage(Message message) throws JMSException, IOException {
+    /**
+     * Processes the specified JMS message
+     *
+     * @param message the message to process
+     * @return true if the message was processed otherwise false
+     * @throws JMSException
+     */
+    public boolean processMessage(Message message) throws JMSException {
+        log.debug("Processing JMS message");
         MapMessage mm = (MapMessage) message;
         String encUuid = mm.getString("uuid");
         Encounter encounter = Context.getEncounterService().getEncounterByUuid(encUuid);
         if (Dhis2TrackerConstants.LOINC_CODE_CASE_REPORT.equals(encounter.getEncounterType().getName())) {
-            return Dhis2HttpClient.newInstance().post(null, null);
+            return Dhis2TrackerWebUtil.processEncounter(encounter);
         }
 
         return false;

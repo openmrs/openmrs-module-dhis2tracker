@@ -21,7 +21,6 @@ import org.openmrs.EncounterType;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhis2tracker.api.Dhis2TrackerConstants;
-import org.openmrs.module.dhis2tracker.web.Dhis2HttpClient;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -29,30 +28,27 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import javax.jms.MapMessage;
 import java.io.IOException;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Context.class, Dhis2HttpClient.class})
+@PrepareForTest({Context.class, Dhis2TrackerWebUtil.class})
 public class CaseReportEventListenerTest {
 
     @Mock
     private EncounterService es;
-
-    @Mock
-    private Dhis2HttpClient client;
 
     private CaseReportEventListener listener = new CaseReportEventListener(null);
 
     @Before
     public void before() throws IOException {
         PowerMockito.mockStatic(Context.class);
-        PowerMockito.mockStatic(Dhis2HttpClient.class);
-        when(client.post(null, null)).thenReturn(true);
-        when(Dhis2HttpClient.newInstance()).thenReturn(client);
+        PowerMockito.mockStatic(Dhis2TrackerWebUtil.class);
+        when(Dhis2TrackerWebUtil.processEncounter(any(Encounter.class))).thenReturn(true);
     }
 
     @Test
-    public void processMessage_shouldSubmitCaseReportDataToTheHealthExchange() throws Exception {
+    public void processMessage_shouldProcessMessageIfTheEncounterIsOfTheCaseReportEncounterType() throws Exception {
         EncounterType encType = new EncounterType();
         encType.setName(Dhis2TrackerConstants.LOINC_CODE_CASE_REPORT);
         Encounter enc = new Encounter();
@@ -66,7 +62,7 @@ public class CaseReportEventListenerTest {
     }
 
     @Test
-    public void processMessage_shouldNotSubmitCaseReportDataForOtherEncounterTypes() throws Exception {
+    public void processMessage_shouldNotProcessMessageIfTheEncounterIsOfAnotherEncounterType() throws Exception {
         EncounterType encType = new EncounterType();
         encType.setName("Some encounter type");
         Encounter enc = new Encounter();

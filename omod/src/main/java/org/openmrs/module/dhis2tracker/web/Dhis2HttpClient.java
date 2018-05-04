@@ -31,20 +31,26 @@ public class Dhis2HttpClient {
         return new Dhis2HttpClient();
     }
 
-    public boolean post(String resource, Object data) throws IOException {
+    public boolean post(String resource, Object data) {
         log.debug("Posting data to DHIS2");
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
             HttpPost post = new HttpPost(DHIS2_URL + resource);
             CloseableHttpResponse response = httpclient.execute(post, null, null);
-
             try {
+
             } finally {
                 response.close();
             }
+        } catch (Exception e) {
+            log.error("An error occurred while submitting data to dhi2tracker", e);
         } finally {
-            httpclient.close();
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                log.error("An error occurred while closing http client", e);
+            }
         }
 
         return false;
