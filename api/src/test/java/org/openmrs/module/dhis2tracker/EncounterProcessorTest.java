@@ -43,7 +43,7 @@ public class EncounterProcessorTest {
     private EncounterProcessor processor = EncounterProcessor.newInstance();
 
     @Test
-    public void process_shouldRegisterAndEnrollThePatientInAProgramInDhis2() {
+    public void process_shouldRegisterAndEnrollThePatientInAProgramInTracker() {
         mockStatic(Context.class);
         mockStatic(Dhis2HttpClient.class);
         final String expectedUid = "test-uid";
