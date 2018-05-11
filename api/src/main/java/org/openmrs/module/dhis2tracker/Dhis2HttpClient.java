@@ -38,7 +38,7 @@ public class Dhis2HttpClient {
      * @param patient the patient ro register and enroll
      * @return the generated UID of the patient in DHIS2
      */
-    public String registerAndEnrollInProgramInTracker(Patient patient) {
+    public String registerAndEnroll(Patient patient) {
         return null;
     }
 
@@ -48,7 +48,7 @@ public class Dhis2HttpClient {
      * @param patient the patient ro register and enroll
      * @return the generated UID of the patient in DHIS2
      */
-    public boolean sendEventToTracker(Patient patient) {
+    public boolean sendEvents(Patient patient) {
         return false;
     }
 

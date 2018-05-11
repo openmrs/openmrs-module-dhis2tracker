@@ -55,7 +55,8 @@ public class EncounterProcessorTest {
         uidAttribType.setUuid(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID);
         when(ps.getPersonAttributeTypeByUuid(eq(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID))).thenReturn(uidAttribType);
         when(Dhis2HttpClient.newInstance()).thenReturn(dhis2HttpClient);
-        when(dhis2HttpClient.registerAndEnrollInProgramInTracker(eq(p))).thenReturn(expectedUid);
+        when(dhis2HttpClient.registerAndEnroll(eq(p))).thenReturn(expectedUid);
+        when(dhis2HttpClient.sendEvents(eq(p))).thenReturn(true);
 
         assertNull(p.getAttribute(uidAttribType));
         assertTrue(processor.process(e));
@@ -75,7 +76,7 @@ public class EncounterProcessorTest {
         Encounter e = new Encounter();
         e.setPatient(p);
         when(Dhis2HttpClient.newInstance()).thenReturn(dhis2HttpClient);
-        when(dhis2HttpClient.sendEventToTracker(eq(p))).thenReturn(true);
+        when(dhis2HttpClient.sendEvents(eq(p))).thenReturn(true);
 
         assertNotNull(p.getAttribute(uidAttribType));
         assertTrue(processor.process(e));

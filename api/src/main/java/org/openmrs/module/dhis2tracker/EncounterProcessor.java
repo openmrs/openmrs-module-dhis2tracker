@@ -55,13 +55,13 @@ public class EncounterProcessor {
         Patient patient = encounter.getPatient();
         PersonAttribute pAttrib = patient.getAttribute(uidAttributeType);
         if (pAttrib == null) {
-            String patientUid = dhis2HttpClient.registerAndEnrollInProgramInTracker(patient);
+            //Register and enroll the patient in the program
+            String patientUid = dhis2HttpClient.registerAndEnroll(patient);
             patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
             ps.savePerson(patient);
-            return true;
-        } else {
-            return dhis2HttpClient.sendEventToTracker(patient);
         }
+
+        return dhis2HttpClient.sendEvents(patient);
     }
 
 }
