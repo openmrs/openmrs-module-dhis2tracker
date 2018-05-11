@@ -17,4 +17,7 @@ public class Dhis2TrackerConstants {
 
     public static final String DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID = "ab1e48f4-5528-11e8-9ed7-c05155b794c3";
 
+    public static final String TRIGGER_CONCEPT_SOURCE = "SNOMED CT";
+
+    public static final String TRIGGER_CONCEPT_CODE = "410658008";
 }

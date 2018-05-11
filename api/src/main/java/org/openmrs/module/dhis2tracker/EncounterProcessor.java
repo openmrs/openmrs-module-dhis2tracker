@@ -11,13 +11,20 @@ package org.openmrs.module.dhis2tracker;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.ConceptMap;
+import org.openmrs.ConceptReferenceTerm;
 import org.openmrs.Encounter;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID;
 
@@ -55,13 +62,35 @@ public class EncounterProcessor {
         Patient patient = encounter.getPatient();
         PersonAttribute pAttrib = patient.getAttribute(uidAttributeType);
         if (pAttrib == null) {
+            log.debug("Registering and enrolling the patient with id " + patient.getId() + " in DHIS2");
             //Register and enroll the patient in the program
             String patientUid = dhis2HttpClient.registerAndEnroll(patient);
             patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
             ps.savePerson(patient);
         }
 
-        return dhis2HttpClient.sendEvents(patient);
+        //TODO look up trigger concept GP
+        List<TriggerEvent> events = new ArrayList<>();
+        for (Obs obs : encounter.getObs()) {
+            if (isTriggerObs(obs)) {
+                events.add(new TriggerEvent(obs));
+            }
+        }
+
+        log.debug("Sending event(s) to DHIS2");
+
+        return dhis2HttpClient.sendEvents(events);
+    }
+
+    private boolean isTriggerObs(Obs obs) {
+        Concept c = obs.getConcept();
+        for (ConceptMap map : c.getConceptMappings()) {
+            ConceptReferenceTerm term = map.getConceptReferenceTerm();
+            if (Dhis2TrackerConstants.TRIGGER_CONCEPT_CODE.equalsIgnoreCase(term.getCode()) && Dhis2TrackerConstants.TRIGGER_CONCEPT_SOURCE.equalsIgnoreCase(term.getConceptSource().getHl7Code())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

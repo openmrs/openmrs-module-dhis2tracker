@@ -18,6 +18,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.openmrs.Patient;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Dhis2HttpClient {
 
@@ -43,12 +44,12 @@ public class Dhis2HttpClient {
     }
 
     /**
-     * Registers the specified patient in DHIS2 and enrolls them in the program
+     * Sends the specified events to DHIS tracker
      *
-     * @param patient the patient ro register and enroll
-     * @return the generated UID of the patient in DHIS2
+     * @param events the events to send
+     * @return true if the event are successfully sent otherwise false;
      */
-    public boolean sendEvents(Patient patient) {
+    public boolean sendEvents(List<TriggerEvent> events) {
         return false;
     }
 
