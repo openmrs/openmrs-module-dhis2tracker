@@ -19,46 +19,46 @@ import org.openmrs.module.DaemonToken;
 import org.openmrs.module.DaemonTokenAware;
 
 public class Dhis2TrackerActivator extends BaseModuleActivator implements DaemonTokenAware {
-
-    protected Log log = LogFactory.getLog(getClass());
-
-    private EventListener eventListener;
-
-    private static final Class<Encounter> CLAZZ = Encounter.class;
-
-    private static final Event.Action ACTION = Event.Action.CREATED;
-
-    private DaemonToken daemonToken;
-
-    /**
-     * @see DaemonTokenAware#setDaemonToken(DaemonToken)
-     */
-    @Override
-    public void setDaemonToken(DaemonToken daemonToken) {
-        this.daemonToken = daemonToken;
-    }
-
-    /**
-     * @see BaseModuleActivator#started()
-     */
-    @Override
-    public void started() {
-
-        log.info("Registering case reports listener");
-
-        eventListener = new CaseReportEventListener(daemonToken);
-        Event.subscribe(CLAZZ, ACTION.name(), eventListener);
-    }
-
-    /**
-     * @see BaseModuleActivator#stopped()
-     */
-    @Override
-    public void stopped() {
-
-        log.info("Removing case reports listener");
-
-        Event.unsubscribe(CLAZZ, ACTION, eventListener);
-    }
-
+	
+	protected Log log = LogFactory.getLog(getClass());
+	
+	private EventListener eventListener;
+	
+	private static final Class<Encounter> CLAZZ = Encounter.class;
+	
+	private static final Event.Action ACTION = Event.Action.CREATED;
+	
+	private DaemonToken daemonToken;
+	
+	/**
+	 * @see DaemonTokenAware#setDaemonToken(DaemonToken)
+	 */
+	@Override
+	public void setDaemonToken(DaemonToken daemonToken) {
+		this.daemonToken = daemonToken;
+	}
+	
+	/**
+	 * @see BaseModuleActivator#started()
+	 */
+	@Override
+	public void started() {
+		
+		log.info("Registering case reports listener");
+		
+		eventListener = new CaseReportEventListener(daemonToken);
+		Event.subscribe(CLAZZ, ACTION.name(), eventListener);
+	}
+	
+	/**
+	 * @see BaseModuleActivator#stopped()
+	 */
+	@Override
+	public void stopped() {
+		
+		log.info("Removing case reports listener");
+		
+		Event.unsubscribe(CLAZZ, ACTION, eventListener);
+	}
+	
 }

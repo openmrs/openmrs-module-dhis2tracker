@@ -9,6 +9,11 @@
  */
 package org.openmrs.module.dhis2tracker;
 
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
@@ -23,74 +28,70 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID;
-
 public class EncounterProcessor {
-
-    protected static final Log log = LogFactory.getLog(EncounterProcessor.class);
-
-    private Dhis2HttpClient dhis2HttpClient;
-
-    private EncounterProcessor() {
-    }
-
-    public static EncounterProcessor newInstance() {
-        return new EncounterProcessor();
-    }
-
-    /**
-     * Processes the specified encounter
-     *
-     * @param encounter the encounter to process
-     * @return true if the encounter was processed successfully otherwise false
-     */
-    public boolean process(Encounter encounter) {
-        log.debug("Processing encounter");
-        PersonService ps = Context.getPersonService();
-        PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID);
-        if (uidAttributeType == null) {
-            throw new APIException("Cannot find person attribute type for dhis2 uid");
-        }
-
-        if (dhis2HttpClient == null) {
-            dhis2HttpClient = Dhis2HttpClient.newInstance();
-        }
-
-        Patient patient = encounter.getPatient();
-        PersonAttribute pAttrib = patient.getAttribute(uidAttributeType);
-        if (pAttrib == null) {
-            log.debug("Registering and enrolling the patient with id " + patient.getId() + " in DHIS2");
-            //Register and enroll the patient in the program
-            String patientUid = dhis2HttpClient.registerAndEnroll(patient);
-            patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
-            ps.savePerson(patient);
-        }
-
-        //TODO look up trigger concept GP
-        List<TriggerEvent> events = new ArrayList<>();
-        for (Obs obs : encounter.getObs()) {
-            if (isTriggerObs(obs)) {
-                events.add(new TriggerEvent(obs));
-            }
-        }
-
-        log.debug("Sending event(s) to DHIS2");
-
-        return dhis2HttpClient.sendEvents(events);
-    }
-
-    private boolean isTriggerObs(Obs obs) {
-        Concept c = obs.getConcept();
-        for (ConceptMap map : c.getConceptMappings()) {
-            ConceptReferenceTerm term = map.getConceptReferenceTerm();
-            if (Dhis2TrackerConstants.TRIGGER_CONCEPT_CODE.equalsIgnoreCase(term.getCode()) && Dhis2TrackerConstants.TRIGGER_CONCEPT_SOURCE.equalsIgnoreCase(term.getConceptSource().getHl7Code())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+	
+	protected static final Log log = LogFactory.getLog(EncounterProcessor.class);
+	
+	private Dhis2HttpClient dhis2HttpClient;
+	
+	private EncounterProcessor() {
+	}
+	
+	public static EncounterProcessor newInstance() {
+		return new EncounterProcessor();
+	}
+	
+	/**
+	 * Processes the specified encounter
+	 *
+	 * @param encounter the encounter to process
+	 * @return true if the encounter was processed successfully otherwise false
+	 */
+	public boolean process(Encounter encounter) {
+		log.debug("Processing encounter");
+		PersonService ps = Context.getPersonService();
+		PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID);
+		if (uidAttributeType == null) {
+			throw new APIException("Cannot find person attribute type for dhis2 uid");
+		}
+		
+		if (dhis2HttpClient == null) {
+			dhis2HttpClient = Dhis2HttpClient.newInstance();
+		}
+		
+		Patient patient = encounter.getPatient();
+		PersonAttribute pAttrib = patient.getAttribute(uidAttributeType);
+		if (pAttrib == null) {
+			log.debug("Registering and enrolling the patient with id " + patient.getId() + " in DHIS2");
+			//Register and enroll the patient in the program
+			String patientUid = dhis2HttpClient.registerAndEnroll(patient);
+			patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
+			ps.savePerson(patient);
+		}
+		
+		//TODO look up trigger concept GP
+		List<TriggerEvent> events = new ArrayList<>();
+		for (Obs obs : encounter.getObs()) {
+			if (isTriggerObs(obs)) {
+				events.add(new TriggerEvent(obs));
+			}
+		}
+		
+		log.debug("Sending event(s) to DHIS2");
+		
+		return dhis2HttpClient.sendEvents(events);
+	}
+	
+	private boolean isTriggerObs(Obs obs) {
+		Concept c = obs.getConcept();
+		for (ConceptMap map : c.getConceptMappings()) {
+			ConceptReferenceTerm term = map.getConceptReferenceTerm();
+			if (Dhis2TrackerConstants.TRIGGER_CONCEPT_CODE.equalsIgnoreCase(term.getCode())
+			        && Dhis2TrackerConstants.TRIGGER_CONCEPT_SOURCE.equalsIgnoreCase(term.getConceptSource().getHl7Code())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

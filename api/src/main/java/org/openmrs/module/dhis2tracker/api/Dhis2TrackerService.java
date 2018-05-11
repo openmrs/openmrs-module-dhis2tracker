@@ -15,6 +15,5 @@ import org.openmrs.api.OpenmrsService;
  * Contains methods for processing CRUD operations
  */
 public interface Dhis2TrackerService extends OpenmrsService {
-
-
+	
 }

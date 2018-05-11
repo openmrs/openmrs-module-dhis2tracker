@@ -9,37 +9,37 @@
  */
 package org.openmrs.module.dhis2tracker;
 
-import org.mockito.ArgumentMatcher;
-
 import java.util.List;
 
+import org.mockito.ArgumentMatcher;
+
 public class ListMatcher extends ArgumentMatcher<List> {
-
-    private List list;
-
-    public ListMatcher(List list) {
-        this.list = list;
-    }
-
-    @Override
-    public boolean matches(Object object) {
-
-        if (list == null) {
-            return object == null;
-        } else if (object == null) {
-            return list == null;
-        }
-
-        List otherList = (List) object;
-        if (list.size() != otherList.size()) {
-            return false;
-        }
-
-        boolean matches = false;
-        for (Object item : list) {
-            matches = otherList.contains(item);
-        }
-
-        return matches;
-    }
+	
+	private List list;
+	
+	public ListMatcher(List list) {
+		this.list = list;
+	}
+	
+	@Override
+	public boolean matches(Object object) {
+		
+		if (list == null) {
+			return object == null;
+		} else if (object == null) {
+			return list == null;
+		}
+		
+		List otherList = (List) object;
+		if (list.size() != otherList.size()) {
+			return false;
+		}
+		
+		boolean matches = false;
+		for (Object item : list) {
+			matches = otherList.contains(item);
+		}
+		
+		return matches;
+	}
 }

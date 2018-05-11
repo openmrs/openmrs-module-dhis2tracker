@@ -19,28 +19,27 @@ import org.openmrs.module.dhis2tracker.api.db.Dhis2TrackerDAO;
  * Default implementation of {@link Dhis2TrackerDAO}.
  */
 public class HibernateDhis2TrackerDAO implements Dhis2TrackerDAO {
-
-    protected final Log log = LogFactory.getLog(this.getClass());
-
-    private SessionFactory sessionFactory;
-
-    /**
-     * @param sessionFactory the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    /**
-     * @return the sessionFactory
-     */
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    private Session getCurrentSession() {
-        return getSessionFactory().getCurrentSession();
-    }
-
-
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
+	
+	private SessionFactory sessionFactory;
+	
+	/**
+	 * @param sessionFactory the sessionFactory to set
+	 */
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	/**
+	 * @return the sessionFactory
+	 */
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+	
+	private Session getCurrentSession() {
+		return getSessionFactory().getCurrentSession();
+	}
+	
 }

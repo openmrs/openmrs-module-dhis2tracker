@@ -21,12 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional(readOnly = true)
 public class Dhis2TrackerServiceImpl extends BaseOpenmrsService implements Dhis2TrackerService {
-
-    protected final Log log = LogFactory.getLog(this.getClass());
-
-    private Dhis2TrackerDAO dao;
-
-    public void setDao(Dhis2TrackerDAO dao) {
-        this.dao = dao;
-    }
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
+	
+	private Dhis2TrackerDAO dao;
+	
+	public void setDao(Dhis2TrackerDAO dao) {
+		this.dao = dao;
+	}
 }

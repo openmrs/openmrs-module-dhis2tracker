@@ -12,5 +12,4 @@ package org.openmrs.module.dhis2tracker.api.db;
 /**
  * Database access methods for {@link Dhis2TrackerDAO}.
  */
-public interface Dhis2TrackerDAO {
-}
+public interface Dhis2TrackerDAO {}
