@@ -45,7 +45,7 @@ public class EncounterProcessor {
         PersonService ps = Context.getPersonService();
         PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID);
         if (uidAttributeType == null) {
-            throw new APIException("Cannot find person attribute type for  dhis2 uid");
+            throw new APIException("Cannot find person attribute type for dhis2 uid");
         }
 
         if (dhis2HttpClient == null) {
