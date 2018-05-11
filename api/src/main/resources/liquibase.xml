@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <!--
+        See http://www.liquibase.org/documentation/changeset.html
+        for a list of supported elements and attributes
+    -->
+
+    <changeSet id="${project.parent.artifactId}-20180511-1603" author="Wyclif">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM person_attribute_type
+                WHERE uuid = 'ab1e48f4-5528-11e8-9ed7-c05155b794c3'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding DHIS2 UID person attribute type</comment>
+        <insert tableName="person_attribute_type">
+            <column name="name" value="DHIS2 UID" />
+            <column name="description" value="The person's UID in the DHIS2 instance" />
+            <column name="creator" valueNumeric="1" />
+            <column name="date_created" valueDate="2018-05-11" />
+            <column name="uuid" value="ab1e48f4-5528-11e8-9ed7-c05155b794c3" />
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

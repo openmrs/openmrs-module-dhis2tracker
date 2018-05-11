@@ -12,10 +12,20 @@ package org.openmrs.module.dhis2tracker;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.api.APIException;
+import org.openmrs.api.PersonService;
+import org.openmrs.api.context.Context;
+
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID;
 
 public class EncounterProcessor {
 
     protected static final Log log = LogFactory.getLog(EncounterProcessor.class);
+
+    private Dhis2HttpClient dhis2HttpClient;
 
     private EncounterProcessor() {
     }
@@ -28,14 +38,30 @@ public class EncounterProcessor {
      * Processes the specified encounter
      *
      * @param encounter the encounter to process
-     * @return true if the encounter was processed otherwise false
+     * @return true if the encounter was processed successfully otherwise false
      */
     public boolean process(Encounter encounter) {
         log.debug("Processing encounter");
-        //Check if patient has a dhis2 identifier
-        //If the don't register and enroll
-        //Otherwise enroll or post event
-        return true;
+        PersonService ps = Context.getPersonService();
+        PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID);
+        if (uidAttributeType == null) {
+            throw new APIException("Cannot find person attribute type for  dhis2 uid");
+        }
+
+        if (dhis2HttpClient == null) {
+            dhis2HttpClient = Dhis2HttpClient.newInstance();
+        }
+
+        Patient patient = encounter.getPatient();
+        PersonAttribute pAttrib = patient.getAttribute(uidAttributeType);
+        if (pAttrib == null) {
+            String patientUid = dhis2HttpClient.registerAndEnrollInProgramInTracker(patient);
+            patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
+            ps.savePerson(patient);
+            return true;
+        } else {
+            return dhis2HttpClient.sendEventToTracker(patient);
+        }
     }
 
 }

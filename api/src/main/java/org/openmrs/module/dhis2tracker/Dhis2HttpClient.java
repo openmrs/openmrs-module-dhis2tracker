@@ -15,12 +15,13 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.openmrs.Patient;
 
 import java.io.IOException;
 
 public class Dhis2HttpClient {
 
-    protected Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(Dhis2HttpClient.class);
 
     private static final String DHIS2_URL = "http://localhost/";
 
@@ -31,6 +32,26 @@ public class Dhis2HttpClient {
         return new Dhis2HttpClient();
     }
 
+    /**
+     * Registers the specified patient in DHIS2 and enrolls them in the program
+     *
+     * @param patient the patient ro register and enroll
+     * @return the generated UID of the patient in DHIS2
+     */
+    public String registerAndEnrollInProgramInTracker(Patient patient) {
+        return null;
+    }
+
+    /**
+     * Registers the specified patient in DHIS2 and enrolls them in the program
+     *
+     * @param patient the patient ro register and enroll
+     * @return the generated UID of the patient in DHIS2
+     */
+    public boolean sendEventToTracker(Patient patient) {
+        return false;
+    }
+
     public boolean post(String resource, Object data) {
         log.debug("Posting data to DHIS2");
 
@@ -39,7 +60,7 @@ public class Dhis2HttpClient {
             HttpPost post = new HttpPost(DHIS2_URL + resource);
             CloseableHttpResponse response = httpclient.execute(post, null, null);
             try {
-
+                log.debug("Processing response...");
             } finally {
                 response.close();
             }
