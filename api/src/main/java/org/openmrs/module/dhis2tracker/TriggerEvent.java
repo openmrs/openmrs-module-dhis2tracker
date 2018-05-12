@@ -84,7 +84,7 @@ public class TriggerEvent {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(o instanceof TriggerEvent) || !getClass().equals(o.getClass())) {
 			return false;
 		}
 		
