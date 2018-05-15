@@ -24,7 +24,9 @@ public class Dhis2HttpClient {
 	
 	protected static final Log log = LogFactory.getLog(Dhis2HttpClient.class);
 	
-	private static final String DHIS2_URL = "http://localhost/";
+	private static final String RESOURCE_REGISTER_AND_ENROLL = "trackedEntityInstances";
+	
+	private static final String RESOURCE_EVENT = "events";
 	
 	private Dhis2HttpClient() {
 	}
@@ -40,7 +42,8 @@ public class Dhis2HttpClient {
 	 * @return the generated UID of the patient in DHIS2
 	 */
 	public String registerAndEnroll(Patient patient) {
-		return null;
+	    
+		return null;// post(RESOURCE_REGISTER_AND_ENROLL, null);
 	}
 	
 	/**
@@ -53,12 +56,12 @@ public class Dhis2HttpClient {
 		return false;
 	}
 	
-	public boolean post(String resource, Object data) {
+	public Object post(String resource, Object data) {
 		log.debug("Posting data to DHIS2");
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
-			HttpPost post = new HttpPost(DHIS2_URL + resource);
+			HttpPost post = new HttpPost(resource);
 			CloseableHttpResponse response = httpclient.execute(post, null, null);
 			try {
 				log.debug("Processing response...");
@@ -81,4 +84,5 @@ public class Dhis2HttpClient {
 		
 		return false;
 	}
+	
 }

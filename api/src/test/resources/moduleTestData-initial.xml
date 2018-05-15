@@ -13,5 +13,7 @@
 -->
 
 <dataset>
-
+    <global_property property="dhis2tracker.dhis2Url" property_value="http://localhost:{{PORT}}/dhis2" uuid="1f55827e-26fe-103b-80cb-0017a47871b3" />
+    <global_property property="dhis2tracker.username" property_value="fake user" uuid="2f55827e-26fe-103b-80cb-0017a47871b3" />
+    <global_property property="dhis2tracker.password" property_value="fake password" uuid="3f55827e-26fe-103b-80cb-0017a47871b3" />
 </dataset>
