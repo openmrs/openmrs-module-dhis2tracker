@@ -86,7 +86,13 @@ public class EncounterProcessor {
 		
 		log.debug("Sending event(s) to DHIS2");
 		
-		return dhis2HttpClient.sendEvents(events);
+		try {
+			return dhis2HttpClient.sendEvents(events);
+		}
+		catch (IOException e) {
+			log.error("Failed to submit event(s) to DHIS2 for patient with id: " + patient.getId());
+			return false;
+		}
 	}
 	
 	private boolean isTriggerObs(Obs obs) {

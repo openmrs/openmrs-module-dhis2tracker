@@ -23,7 +23,7 @@ public class TriggerEvent {
 	
 	private String patientUid;
 	
-	private String trigger;
+	//private String trigger;
 	
 	private String locationUid = "";
 	
@@ -39,7 +39,7 @@ public class TriggerEvent {
 			throw new APIException("Cannot find person attribute type for dhis2 uid");
 		}
 		patientUid = obs.getPerson().getAttribute(uidAttributeType).getValue();
-		trigger = obs.getValueCoded().getDisplayString();
+		//trigger = obs.getValueCoded().getDisplayString();
 		date = obs.getObsDatetime();
 		//locationUid = obs.getLocation();
 	}
@@ -50,14 +50,6 @@ public class TriggerEvent {
 	
 	public void setPatientUid(String patientUid) {
 		this.patientUid = patientUid;
-	}
-	
-	public String getTrigger() {
-		return trigger;
-	}
-	
-	public void setTrigger(String trigger) {
-		this.trigger = trigger;
 	}
 	
 	public String getLocationUid() {
@@ -93,9 +85,9 @@ public class TriggerEvent {
 		if (!patientUid.equals(that.patientUid)) {
 			return false;
 		}
-		if (!trigger.equals(that.trigger)) {
+		/*if (!trigger.equals(that.trigger)) {
 			return false;
-		}
+		}*/
 		if (!locationUid.equals(that.locationUid)) {
 			return false;
 		}
@@ -109,7 +101,7 @@ public class TriggerEvent {
 	@Override
 	public int hashCode() {
 		int result = patientUid != null ? patientUid.hashCode() : 0;
-		result = 31 * result + (trigger != null ? trigger.hashCode() : 0);
+		//result = 31 * result + (trigger != null ? trigger.hashCode() : 0);
 		result = 31 * result + (locationUid != null ? locationUid.hashCode() : 0);
 		result = 31 * result + (date != null ? date.hashCode() : 0);
 		return result;

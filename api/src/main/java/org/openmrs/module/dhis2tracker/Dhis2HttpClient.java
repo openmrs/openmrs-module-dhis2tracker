@@ -37,9 +37,9 @@ public class Dhis2HttpClient {
 	
 	public static final String SUB_PATH_API = "api/";
 	
-	public static final String RESOURCE_REGISTER_AND_ENROLL = SUB_PATH_API + "trackedEntityInstances";
+	public static final String RESOURCE_TRACKED_ENTITY_INSTANCES = SUB_PATH_API + "trackedEntityInstances";
 	
-	public static final String RESOURCE_EVENT = SUB_PATH_API + "events";
+	public static final String RESOURCE_EVENTS = SUB_PATH_API + "events";
 	
 	private Dhis2HttpClient() {
 	}
@@ -57,9 +57,8 @@ public class Dhis2HttpClient {
 	 */
 	public String registerAndEnroll(Patient patient, Date incidentDate) throws IOException {
 		Object data = Dhis2Utils.buildRegisterAndEnrollContent(patient, incidentDate);
-		Dhis2Response response = post(RESOURCE_REGISTER_AND_ENROLL, data, true);
-		if (HttpStatus.SC_OK != response.getHttpStatusCode()
-		        || !ImportSummary.STATUS_SUCCESS.equals(response.getResponse().getStatus())) {
+		Dhis2Response response = post(RESOURCE_TRACKED_ENTITY_INSTANCES, data, true);
+		if (!isSuccessful(response)) {
 			throw new APIException("Registration of patient with id: " + patient.getId() + " was not successful");
 		}
 		log.debug("Extracting generated the UID of the registered patient");
@@ -73,9 +72,12 @@ public class Dhis2HttpClient {
 	 * @param events the events to send
 	 * @return true if the event are successfully sent otherwise false;
 	 */
-	public boolean sendEvents(List<TriggerEvent> events) {
-		
-		return false;
+	public boolean sendEvents(List<TriggerEvent> events) throws IOException {
+		Dhis2Response response = post(RESOURCE_EVENTS, null, false);
+		if (!isSuccessful(response)) {
+			throw new APIException("Send of events to DHIS2 was not successful");
+		}
+		return true;
 	}
 	
 	public Dhis2Response post(String resource, Object data, boolean isRegistration) throws IOException {
@@ -107,6 +109,11 @@ public class Dhis2HttpClient {
 				log.error("An error occurred while closing http client", e);
 			}
 		}
+	}
+	
+	private boolean isSuccessful(Dhis2Response response) {
+		return HttpStatus.SC_OK == response.getHttpStatusCode()
+		        && ImportSummary.STATUS_SUCCESS.equals(response.getResponse().getStatus());
 	}
 	
 }

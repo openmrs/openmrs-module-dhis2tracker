@@ -42,6 +42,8 @@ public class Dhis2TrackerConstants {
 	
 	public static final String GP_PASSWORD = MODULE_ID + ".password";
 	
+	public static final String GP_ORG_UNIT_UID = MODULE_ID + ".orgUnitUID";
+	
 	public static final String GP_TRACKED_ENTITY_TYPE_UID = MODULE_ID + ".trackedEntityTypeUID";
 	
 	public static final String GP_PROGRAM_UID = MODULE_ID + ".programUID";

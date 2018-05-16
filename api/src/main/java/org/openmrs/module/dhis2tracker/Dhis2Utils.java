@@ -51,11 +51,15 @@ public class Dhis2Utils {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_PASSWORD);
 	}
 	
+	public static String getOrgUnitUID() {
+		return getGlobalProperty(Dhis2TrackerConstants.GP_ORG_UNIT_UID);
+	}
+	
 	public static String getTrackedEntityTypeUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_TRACKED_ENTITY_TYPE_UID);
 	}
 	
-	public static String getprogramUID() {
+	public static String getProgramUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_PROGRAM_UID);
 	}
 	

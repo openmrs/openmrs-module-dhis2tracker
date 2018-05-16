@@ -11,14 +11,18 @@ package org.openmrs.module.dhis2tracker;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE_JSON;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE_XML;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DATE_FORMATTER;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_ACCEPT;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_CONTENT_TYPE;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -41,9 +45,13 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 	
 	private static final Integer DHIS2_PORT = getAvailablePort();
 	
-	private static final String SUCCESS_RESPONSE_JSON = "success_response.json";
+	private static final String SUCCESS_RESPONSE_REGISTER = "success_response_register.json";
 	
-	private static final String FAILURE_RESPONSE_JSON = "failure_response.json";
+	private static final String SUCCESS_RESPONSE_EVENT = "success_response_event.json";
+	
+	private static final String FAILURE_RESPONSE_REGISTER = "failure_response_register.json";
+	
+	private static final String FAILURE_RESPONSE_EVENT = "failure_response_event.json";
 	
 	private Dhis2HttpClient dhis2HttpClient = Dhis2HttpClient.newInstance();
 	
@@ -73,20 +81,28 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		as.saveGlobalProperty(gp);
 	}
 	
-	public static String getResponse(boolean success) throws IOException {
-		String filename = success ? SUCCESS_RESPONSE_JSON : FAILURE_RESPONSE_JSON;
+	public static String getResponse(boolean isRegistration, boolean success) throws IOException {
+		String filename;
+		if (isRegistration) {
+			filename = success ? SUCCESS_RESPONSE_REGISTER : FAILURE_RESPONSE_REGISTER;
+		} else {
+			filename = success ? SUCCESS_RESPONSE_EVENT : FAILURE_RESPONSE_EVENT;
+		}
 		return IOUtils.toString(OpenmrsClassLoader.getInstance().getResourceAsStream(filename));
 	}
 	
-	public static void createPostStub(String resource, boolean withSuccessResponse) throws IOException {
+	public static void createPostStub(String resource, boolean isRegistration, boolean withSuccessResponse)
+	    throws IOException {
 		
 		final int sc = withSuccessResponse ? HttpStatus.SC_OK : HttpStatus.SC_INTERNAL_SERVER_ERROR;
-		
+		final String contentType = isRegistration ? CONTENT_TYPE_JSON : CONTENT_TYPE_XML;
 		WireMock.stubFor(
 		    WireMock.post(WireMock.urlEqualTo("/" + resource)).withHeader(HEADER_ACCEPT, containing(CONTENT_TYPE_JSON))
-		            .withHeader(HEADER_CONTENT_TYPE, containing(CONTENT_TYPE_JSON)).withRequestBody(containing(""))
-		            .withBasicAuth("fake user", "fake password").willReturn(WireMock.aResponse().withStatus(sc)
-		                    .withHeader("Content-Type", CONTENT_TYPE_JSON).withBody(getResponse(withSuccessResponse))));
+		            .withHeader(HEADER_CONTENT_TYPE, containing(contentType))
+		            //.withRequestBody(containing(""))
+		            .withBasicAuth("fake user", "fake password")
+		            .willReturn(WireMock.aResponse().withStatus(sc).withHeader("Content-Type", CONTENT_TYPE_JSON)
+		                    .withBody(getResponse(isRegistration, withSuccessResponse))));
 	}
 	
 	@Test
@@ -99,10 +115,31 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		p.setBirthdate(DATE_FORMATTER.parse("1980-04-20"));
 		Date incidenceDate = DATE_FORMATTER.parse("2018-04-20");
 		setDhis2Port(DHIS2_PORT);
-		createPostStub(Dhis2HttpClient.RESOURCE_REGISTER_AND_ENROLL, true);
+		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, true);
 		
 		String uid = dhis2HttpClient.registerAndEnroll(p, incidenceDate);
 		assertEquals(expectedUid, uid);
+	}
+	
+	@Test
+	public void sendEvents_shouldSendEventsToDhis2Tracker() throws Exception {
+		executeDataSet("moduleTestData-initial.xml");
+		final String patientUid = "z2v7tDgvurD";
+		setDhis2Port(DHIS2_PORT);
+		
+		Date encDate = DATE_FORMATTER.parse("2018-04-20");
+		List<TriggerEvent> events = new ArrayList<>();
+		TriggerEvent newHivEvent = new TriggerEvent();
+		newHivEvent.setPatientUid(patientUid);
+		newHivEvent.setDate(encDate);
+		events.add(newHivEvent);
+		TriggerEvent newDiseaseEvent = new TriggerEvent();
+		newDiseaseEvent.setPatientUid(patientUid);
+		newDiseaseEvent.setDate(encDate);
+		events.add(newDiseaseEvent);
+		createPostStub(Dhis2HttpClient.RESOURCE_EVENTS, false, true);
+		
+		assertTrue(dhis2HttpClient.sendEvents(events));
 	}
 	
 }

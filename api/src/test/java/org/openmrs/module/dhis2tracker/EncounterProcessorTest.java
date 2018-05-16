@@ -82,12 +82,12 @@ public class EncounterProcessorTest {
 		e.addObs(newDisease);
 		List<TriggerEvent> events = new ArrayList<>();
 		TriggerEvent newHivEvent = new TriggerEvent();
-		newHivEvent.setTrigger(newHivCase.getValueCoded().getDisplayString());
+		//newHivEvent.setTrigger(newHivCase.getValueCoded().getDisplayString());
 		newHivEvent.setPatientUid(expectedUid);
 		newHivEvent.setDate(newHivCase.getObsDatetime());
 		events.add(newHivEvent);
 		TriggerEvent newDiseaseEvent = new TriggerEvent();
-		newDiseaseEvent.setTrigger(newDisease.getValueCoded().getDisplayString());
+		//newDiseaseEvent.setTrigger(newDisease.getValueCoded().getDisplayString());
 		newDiseaseEvent.setPatientUid(expectedUid);
 		newDiseaseEvent.setDate(newDisease.getObsDatetime());
 		events.add(newDiseaseEvent);
@@ -105,7 +105,7 @@ public class EncounterProcessorTest {
 	}
 	
 	@Test
-	public void process_shouldSendEventToTrackerIfThePatientIsAlreadyRegisteredInDhis2() {
+	public void process_shouldSendEventToTrackerIfThePatientIsAlreadyRegisteredInDhis2() throws Exception {
 		mockStatic(Context.class);
 		mockStatic(Dhis2HttpClient.class);
 		mockStatic(LocaleUtility.class);
@@ -134,7 +134,7 @@ public class EncounterProcessorTest {
 		e.addObs(nonTriggerConcept);
 		List<TriggerEvent> events = new ArrayList<>();
 		TriggerEvent newHivEvent = new TriggerEvent();
-		newHivEvent.setTrigger(newHivCase.getValueCoded().getDisplayString());
+		//newHivEvent.setTrigger(newHivCase.getValueCoded().getDisplayString());
 		newHivEvent.setPatientUid(expectedUid);
 		newHivEvent.setDate(newHivCase.getObsDatetime());
 		events.add(newHivEvent);
