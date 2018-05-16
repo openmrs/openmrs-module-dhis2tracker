@@ -82,11 +82,11 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		
 		final int sc = withSuccessResponse ? HttpStatus.SC_OK : HttpStatus.SC_INTERNAL_SERVER_ERROR;
 		
-		WireMock.stubFor(WireMock.post(WireMock.urlEqualTo("/" + Dhis2TrackerConstants.SUB_PATH_API + resource))
-		        .withHeader(HEADER_ACCEPT, containing(CONTENT_TYPE_JSON))
-		        .withHeader(HEADER_CONTENT_TYPE, containing(CONTENT_TYPE_JSON)).withRequestBody(containing(""))
-		        .withBasicAuth("fake user", "fake password").willReturn(WireMock.aResponse().withStatus(sc)
-		                .withHeader("Content-Type", CONTENT_TYPE_JSON).withBody(getResponse(withSuccessResponse))));
+		WireMock.stubFor(
+		    WireMock.post(WireMock.urlEqualTo("/" + resource)).withHeader(HEADER_ACCEPT, containing(CONTENT_TYPE_JSON))
+		            .withHeader(HEADER_CONTENT_TYPE, containing(CONTENT_TYPE_JSON)).withRequestBody(containing(""))
+		            .withBasicAuth("fake user", "fake password").willReturn(WireMock.aResponse().withStatus(sc)
+		                    .withHeader("Content-Type", CONTENT_TYPE_JSON).withBody(getResponse(withSuccessResponse))));
 	}
 	
 	@Test

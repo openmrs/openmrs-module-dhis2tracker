@@ -18,8 +18,6 @@ public class Dhis2TrackerConstants {
 	
 	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 	
-	public static final String SUB_PATH_API = "api/";
-	
 	public static final String HEADER_ACCEPT = "Accept";
 	
 	public static final String HEADER_AUTH = "Authorization";
