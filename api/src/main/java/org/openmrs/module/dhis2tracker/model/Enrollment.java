@@ -30,4 +30,19 @@ public class Enrollment {
 		this.incidentDate = incidentDate;
 	}
 	
+	public String getOrgUnit() {
+		return orgUnit;
+	}
+	
+	public String getProgram() {
+		return program;
+	}
+	
+	public String getEnrollmentDate() {
+		return enrollmentDate;
+	}
+	
+	public String getIncidentDate() {
+		return incidentDate;
+	}
 }

@@ -1,0 +1,97 @@
+{
+  "httpStatus": "OK",
+  "httpStatusCode": 200,
+  "status": "OK",
+  "message": "Import was successful.",
+  "response": {
+    "responseType": "ImportSummaries",
+    "status": "SUCCESS",
+    "imported": 1,
+    "updated": 0,
+    "deleted": 0,
+    "ignored": 0,
+    "importOptions": {
+      "idSchemes": {
+      },
+      "dryRun": false,
+      "async": false,
+      "importStrategy": "CREATE_AND_UPDATE",
+      "mergeMode": "REPLACE",
+      "reportMode": "FULL",
+      "skipExistingCheck": false,
+      "sharing": false,
+      "skipNotifications": false,
+      "datasetAllowsPeriods": false,
+      "strictPeriods": false,
+      "strictCategoryOptionCombos": false,
+      "strictAttributeOptionCombos": false,
+      "strictOrganisationUnits": false,
+      "requireCategoryOptionCombo": false,
+      "requireAttributeOptionCombo": false,
+      "skipPatternValidation": false
+    },
+    "importSummaries": [
+      {
+        "responseType": "ImportSummary",
+        "status": "SUCCESS",
+        "importOptions": {
+          "idSchemes": {
+          },
+          "dryRun": false,
+          "async": false,
+          "importStrategy": "CREATE_AND_UPDATE",
+          "mergeMode": "REPLACE",
+          "reportMode": "FULL",
+          "skipExistingCheck": false,
+          "sharing": false,
+          "skipNotifications": false,
+          "datasetAllowsPeriods": false,
+          "strictPeriods": false,
+          "strictCategoryOptionCombos": false,
+          "strictAttributeOptionCombos": false,
+          "strictOrganisationUnits": false,
+          "requireCategoryOptionCombo": false,
+          "requireAttributeOptionCombo": false,
+          "skipPatternValidation": false
+        },
+        "importCount": {
+          "imported": 1,
+          "updated": 0,
+          "ignored": 0,
+          "deleted": 0
+        },
+        "reference": "z2v7tDgvurD",
+        "href": "https://play.dhis2.org/2.29/api/trackedEntityInstances/z2v7tDgvurD",
+        "enrollments": {
+          "responseType": "ImportSummaries",
+          "status": "SUCCESS",
+          "imported": 1,
+          "updated": 0,
+          "deleted": 0,
+          "ignored": 0,
+          "importSummaries": [
+            {
+              "responseType": "ImportSummary",
+              "status": "SUCCESS",
+              "importCount": {
+                "imported": 1,
+                "updated": 0,
+                "ignored": 0,
+                "deleted": 0
+              },
+              "reference": "QTbt5QDGJNU",
+              "events": {
+                "responseType": "ImportSummaries",
+                "status": "SUCCESS",
+                "imported": 0,
+                "updated": 0,
+                "deleted": 0,
+                "ignored": 0
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

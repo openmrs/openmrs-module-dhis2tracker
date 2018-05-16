@@ -9,7 +9,7 @@
  */
 package org.openmrs.module.dhis2tracker;
 
-import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PERSON_ATTRIBUTE_TYPE_UUID;
 
 import java.util.Date;
 
@@ -34,7 +34,7 @@ public class TriggerEvent {
 	
 	public TriggerEvent(Obs obs) {
 		PersonService ps = Context.getPersonService();
-		PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(DHIS2_UID_PERSON_ATTRIBUTE_TYPE_UUID);
+		PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(PERSON_ATTRIBUTE_TYPE_UUID);
 		if (uidAttributeType == null) {
 			throw new APIException("Cannot find person attribute type for dhis2 uid");
 		}

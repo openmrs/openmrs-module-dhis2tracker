@@ -9,24 +9,36 @@
  */
 package org.openmrs.module.dhis2tracker;
 
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE_JSON;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE_XML;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_ACCEPT;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_AUTH;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_CONTENT_TYPE;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.SUB_PATH_API;
+
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.openmrs.Patient;
+import org.openmrs.api.APIException;
+import org.openmrs.module.dhis2tracker.model.Dhis2Response;
+import org.openmrs.module.dhis2tracker.model.ImportSummary;
 
 public class Dhis2HttpClient {
 	
 	protected static final Log log = LogFactory.getLog(Dhis2HttpClient.class);
 	
-	private static final String RESOURCE_REGISTER_AND_ENROLL = "trackedEntityInstances";
+	public static final String RESOURCE_REGISTER_AND_ENROLL = "trackedEntityInstances";
 	
-	private static final String RESOURCE_EVENT = "events";
+	public static final String RESOURCE_EVENT = "events";
 	
 	private Dhis2HttpClient() {
 	}
@@ -39,11 +51,19 @@ public class Dhis2HttpClient {
 	 * Registers the specified patient in DHIS2 and enrolls them in the program
 	 *
 	 * @param patient the patient ro register and enroll
+	 * @param incidentDate The date of occurrence of the incidence
 	 * @return the generated UID of the patient in DHIS2
 	 */
-	public String registerAndEnroll(Patient patient) {
-	    
-		return null;// post(RESOURCE_REGISTER_AND_ENROLL, null);
+	public String registerAndEnroll(Patient patient, Date incidentDate) throws IOException {
+		Object data = Dhis2Utils.buildRegisterAndEnrollContent(patient, incidentDate);
+		Dhis2Response response = post(RESOURCE_REGISTER_AND_ENROLL, data, true);
+		if (HttpStatus.SC_OK != response.getHttpStatusCode()
+		        || !ImportSummary.STATUS_SUCCESS.equals(response.getResponse().getStatus())) {
+			throw new APIException("Registration of patient with id: " + patient.getId() + " was not successful");
+		}
+		log.debug("Extracting generated the UID of the registered patient");
+		
+		return response.getResponse().getImportSummaries().get(0).getReference();
 	}
 	
 	/**
@@ -53,25 +73,30 @@ public class Dhis2HttpClient {
 	 * @return true if the event are successfully sent otherwise false;
 	 */
 	public boolean sendEvents(List<TriggerEvent> events) {
+		
 		return false;
 	}
 	
-	public Object post(String resource, Object data) {
+	public Dhis2Response post(String resource, Object data, boolean isRegistration) throws IOException {
 		log.debug("Posting data to DHIS2");
+		
+		String url = Dhis2Utils.getUrl();
+		String username = Dhis2Utils.getUsername();
+		String password = Dhis2Utils.getPassword();
+		url = url.endsWith("/") ? url : url + "/";
+		HttpPost post = new HttpPost(url + SUB_PATH_API + resource);
+		post.addHeader(HEADER_ACCEPT, CONTENT_TYPE_JSON);
+		post.addHeader(HEADER_CONTENT_TYPE, isRegistration ? CONTENT_TYPE_JSON : CONTENT_TYPE_XML);
+		String authToken = Base64.encodeBase64String((username + ":" + password).getBytes());
+		post.addHeader(HEADER_AUTH, "Basic " + authToken);
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
-			HttpPost post = new HttpPost(resource);
-			CloseableHttpResponse response = httpclient.execute(post, null, null);
-			try {
-				log.debug("Processing response...");
-			}
-			finally {
-				response.close();
-			}
+			return httpclient.execute(post, new Dhis2ResponseHandler());
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			log.error("An error occurred while submitting data to dhi2tracker", e);
+			throw e;
 		}
 		finally {
 			try {
@@ -81,8 +106,6 @@ public class Dhis2HttpClient {
 				log.error("An error occurred while closing http client", e);
 			}
 		}
-		
-		return false;
 	}
 	
 }

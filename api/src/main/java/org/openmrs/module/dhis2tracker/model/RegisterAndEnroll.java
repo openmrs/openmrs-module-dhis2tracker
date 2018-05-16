@@ -29,4 +29,19 @@ public class RegisterAndEnroll {
 		enrollments.add(enrollment);
 	}
 	
+	public String getTrackedEntityType() {
+		return trackedEntityType;
+	}
+	
+	public String getOrgUnit() {
+		return orgUnit;
+	}
+	
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+	
+	public List<Enrollment> getEnrollments() {
+		return enrollments;
+	}
 }
