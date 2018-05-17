@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.openmrs.Patient;
@@ -56,7 +57,8 @@ public class Dhis2HttpClient {
 	 * @return the generated UID of the patient in DHIS2
 	 */
 	public String registerAndEnroll(Patient patient, Date incidentDate) throws IOException {
-		Object data = Dhis2Utils.buildRegisterAndEnrollContent(patient, incidentDate);
+		String data = Dhis2Utils.buildRegisterAndEnrollContent(patient, incidentDate);
+		log.warn("\n\n" + data + "\n\n");
 		Dhis2Response response = post(RESOURCE_TRACKED_ENTITY_INSTANCES, data, true);
 		if (!isSuccessful(response)) {
 			throw new APIException("Registration of patient with id: " + patient.getId() + " was not successful");
@@ -73,14 +75,15 @@ public class Dhis2HttpClient {
 	 * @return true if the event are successfully sent otherwise false;
 	 */
 	public boolean sendEvents(List<TriggerEvent> events) throws IOException {
-		Dhis2Response response = post(RESOURCE_EVENTS, null, false);
+		//wAlixVBAyG2Object data = Dhis2Utils.buildEventContent(events);
+		Dhis2Response response = post(RESOURCE_EVENTS, "", false);
 		if (!isSuccessful(response)) {
 			throw new APIException("Send of events to DHIS2 was not successful");
 		}
 		return true;
 	}
 	
-	public Dhis2Response post(String resource, Object data, boolean isRegistration) throws IOException {
+	public Dhis2Response post(String resource, String jsonContent, boolean isRegistration) throws IOException {
 		log.debug("Posting data to DHIS2");
 		
 		String url = Dhis2Utils.getUrl();
@@ -88,6 +91,7 @@ public class Dhis2HttpClient {
 		String password = Dhis2Utils.getPassword();
 		url = url.endsWith("/") ? url : url + "/";
 		HttpPost post = new HttpPost(url + resource);
+		post.setEntity(new StringEntity(jsonContent));
 		post.addHeader(HEADER_ACCEPT, CONTENT_TYPE_JSON);
 		post.addHeader(HEADER_CONTENT_TYPE, isRegistration ? CONTENT_TYPE_JSON : CONTENT_TYPE_XML);
 		String authToken = Base64.encodeBase64String((username + ":" + password).getBytes());

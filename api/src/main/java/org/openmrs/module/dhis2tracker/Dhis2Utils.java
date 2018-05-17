@@ -23,19 +23,23 @@ import org.openmrs.module.dhis2tracker.model.RegisterAndEnroll;
 
 public class Dhis2Utils {
 	
-	private static final String trackedEntityType = "";
-	
-	private static final String orgUnit = "";
-	
-	private static final String program = "";
-	
 	private static final ObjectMapper mapper = new ObjectMapper();
 	
 	public static String buildRegisterAndEnrollContent(Patient patient, Date date) throws IOException {
 		List<Attribute> attributes = new ArrayList<>();
+		attributes.add(new Attribute(Dhis2Utils.getPersonIdUID(), patient.getPatientIdentifier().getIdentifier()));
+		attributes.add(new Attribute(Dhis2Utils.getFirstnameUID(), patient.getGivenName()));
+		attributes.add(new Attribute(Dhis2Utils.getMiddlenameUID(), patient.getMiddleName()));
+		attributes.add(new Attribute(Dhis2Utils.getLastnameUID(), patient.getFamilyName()));
+		attributes.add(new Attribute(Dhis2Utils.getBirthdateUID(),
+		        Dhis2TrackerConstants.DATE_FORMATTER.format(patient.getBirthdate())));
+		attributes.add(new Attribute(Dhis2Utils.getGenderUID(), patient.getGender()));
 		String incidentDate = Dhis2TrackerConstants.DATE_FORMATTER.format(date);
-		Enrollment enrollment = new Enrollment(orgUnit, program, incidentDate);
-		RegisterAndEnroll ene = new RegisterAndEnroll(trackedEntityType, orgUnit, attributes, enrollment);
+		attributes.add(new Attribute(Dhis2Utils.getDateOfDiagnosisUID(), incidentDate));
+		Enrollment enrollment = new Enrollment(Dhis2Utils.getProgramUID(), incidentDate);
+		RegisterAndEnroll ene = new RegisterAndEnroll(Dhis2Utils.getTrackedEntityTypeUID(), Dhis2Utils.getOrgUnitUID(),
+		        attributes, enrollment);
+		
 		return mapper.writeValueAsString(ene);
 	}
 	
@@ -75,16 +79,24 @@ public class Dhis2Utils {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_MIDDLENAME_UID);
 	}
 	
-	public static String getLastnameAttributeUID() {
+	public static String getLastnameUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_LASTNAME_UID);
 	}
 	
-	public static String getGenderAttributeUID() {
+	public static String getGenderUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_GENDER_UID);
 	}
 	
 	public static String getBirthdateUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_BIRTHDATE_UID);
+	}
+	
+	public static String getPersonIdUID() {
+		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_PERSON_ID_UID);
+	}
+	
+	public static String getDateOfDiagnosisUID() {
+		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_DATE_OF_HIV_DIAGNOSIS_UID);
 	}
 	
 	/**

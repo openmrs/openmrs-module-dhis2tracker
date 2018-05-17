@@ -23,8 +23,7 @@ public class Enrollment {
 	
 	private String incidentDate;
 	
-	public Enrollment(String orgUnit, String program, String incidentDate) {
-		this.orgUnit = orgUnit;
+	public Enrollment(String program, String incidentDate) {
 		this.program = program;
 		this.enrollmentDate = Dhis2TrackerConstants.DATE_FORMATTER.format(new Date());
 		this.incidentDate = incidentDate;
@@ -32,6 +31,10 @@ public class Enrollment {
 	
 	public String getOrgUnit() {
 		return orgUnit;
+	}
+	
+	public void setOrgUnit(String orgUnit) {
+		this.orgUnit = orgUnit;
 	}
 	
 	public String getProgram() {
@@ -45,4 +48,5 @@ public class Enrollment {
 	public String getIncidentDate() {
 		return incidentDate;
 	}
+	
 }

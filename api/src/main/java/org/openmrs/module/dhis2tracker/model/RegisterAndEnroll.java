@@ -26,6 +26,7 @@ public class RegisterAndEnroll {
 		this.trackedEntityType = trackedEntityType;
 		this.orgUnit = orgUnit;
 		this.attributes = attributes;
+		enrollment.setOrgUnit(getOrgUnit());
 		enrollments.add(enrollment);
 	}
 	

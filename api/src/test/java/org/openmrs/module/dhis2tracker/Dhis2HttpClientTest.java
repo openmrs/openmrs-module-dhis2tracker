@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonName;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
@@ -110,10 +111,11 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		executeDataSet("moduleTestData-initial.xml");
 		final String expectedUid = "z2v7tDgvurD";
 		Patient p = new Patient();
+		p.addIdentifier(new PatientIdentifier("201", null, null));
 		p.addName(new PersonName("Horacio", "Tom", "Hornblower"));
 		p.setGender("M");
 		p.setBirthdate(DATE_FORMATTER.parse("1980-04-20"));
-		Date incidenceDate = DATE_FORMATTER.parse("2018-04-20");
+		Date incidenceDate = DATE_FORMATTER.parse("2018-04-21");
 		setDhis2Port(DHIS2_PORT);
 		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, true);
 		
@@ -125,7 +127,6 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 	public void sendEvents_shouldSendEventsToDhis2Tracker() throws Exception {
 		executeDataSet("moduleTestData-initial.xml");
 		final String patientUid = "z2v7tDgvurD";
-		setDhis2Port(DHIS2_PORT);
 		
 		Date encDate = DATE_FORMATTER.parse("2018-04-20");
 		List<TriggerEvent> events = new ArrayList<>();
@@ -137,6 +138,7 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		newDiseaseEvent.setPatientUid(patientUid);
 		newDiseaseEvent.setDate(encDate);
 		events.add(newDiseaseEvent);
+		setDhis2Port(DHIS2_PORT);
 		createPostStub(Dhis2HttpClient.RESOURCE_EVENTS, false, true);
 		
 		assertTrue(dhis2HttpClient.sendEvents(events));
