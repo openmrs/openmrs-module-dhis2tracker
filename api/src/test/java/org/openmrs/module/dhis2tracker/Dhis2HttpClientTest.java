@@ -113,7 +113,7 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		Patient p = new Patient();
 		p.addIdentifier(new PatientIdentifier("201", null, null));
 		p.addName(new PersonName("Horacio", "Tom", "Hornblower"));
-		p.setGender("M");
+		p.setGender("F");
 		p.setBirthdate(DATE_FORMATTER.parse("1980-04-20"));
 		Date incidenceDate = DATE_FORMATTER.parse("2018-04-21");
 		setDhis2Port(DHIS2_PORT);

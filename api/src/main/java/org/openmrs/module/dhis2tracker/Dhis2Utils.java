@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Patient;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhis2tracker.model.Attribute;
 import org.openmrs.module.dhis2tracker.model.Enrollment;
@@ -27,13 +28,21 @@ public class Dhis2Utils {
 	
 	public static String buildRegisterAndEnrollContent(Patient patient, Date date) throws IOException {
 		List<Attribute> attributes = new ArrayList<>();
-		attributes.add(new Attribute(Dhis2Utils.getPersonIdUID(), patient.getPatientIdentifier().getIdentifier()));
-		attributes.add(new Attribute(Dhis2Utils.getFirstnameUID(), patient.getGivenName()));
-		attributes.add(new Attribute(Dhis2Utils.getMiddlenameUID(), patient.getMiddleName()));
-		attributes.add(new Attribute(Dhis2Utils.getLastnameUID(), patient.getFamilyName()));
-		attributes.add(new Attribute(Dhis2Utils.getBirthdateUID(),
-		        Dhis2TrackerConstants.DATE_FORMATTER.format(patient.getBirthdate())));
-		attributes.add(new Attribute(Dhis2Utils.getGenderUID(), patient.getGender()));
+		attributes.add(new Attribute(getPersonIdUID(), patient.getPatientIdentifier().getIdentifier()));
+		attributes.add(new Attribute(getFirstnameUID(), patient.getGivenName()));
+		attributes.add(new Attribute(getMiddlenameUID(), patient.getMiddleName()));
+		attributes.add(new Attribute(getLastnameUID(), patient.getFamilyName()));
+		attributes
+		        .add(new Attribute(getBirthdateUID(), Dhis2TrackerConstants.DATE_FORMATTER.format(patient.getBirthdate())));
+		String gender;
+		if ("M".equals(patient.getGender())) {
+			gender = getFemaleOptionUID();
+		} else if ("F".equals(patient.getGender())) {
+			gender = getMaleOptionUID();
+		} else {
+			throw new APIException("Unknown gender '" + patient.getGender() + "' for patient with id: " + patient.getId());
+		}
+		attributes.add(new Attribute(Dhis2Utils.getGenderUID(), gender));
 		String incidentDate = Dhis2TrackerConstants.DATE_FORMATTER.format(date);
 		attributes.add(new Attribute(Dhis2Utils.getDateOfDiagnosisUID(), incidentDate));
 		Enrollment enrollment = new Enrollment(Dhis2Utils.getProgramUID(), incidentDate);
@@ -41,6 +50,14 @@ public class Dhis2Utils {
 		        attributes, enrollment);
 		
 		return mapper.writeValueAsString(ene);
+	}
+	
+	private static String getMaleOptionUID() {
+		return getGlobalProperty(Dhis2TrackerConstants.GP_OPTION_MALE_UID);
+	}
+	
+	private static String getFemaleOptionUID() {
+		return getGlobalProperty(Dhis2TrackerConstants.GP_OPTION_FEMALE_UID);
 	}
 	
 	public static String getUrl() {

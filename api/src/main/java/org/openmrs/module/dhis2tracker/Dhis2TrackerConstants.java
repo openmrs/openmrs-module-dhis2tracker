@@ -63,5 +63,9 @@ public class Dhis2TrackerConstants {
 	public static final String GP_ATTRIB_PERSON_ID_UID = MODULE_ID + ".personIdUID";
 	
 	public static final String GP_ATTRIB_DATE_OF_HIV_DIAGNOSIS_UID = MODULE_ID + ".dateOfHivDiagnosisUID";
+
+    public static final String GP_OPTION_FEMALE_UID = MODULE_ID + ".maleOptionUID";
+
+    public static final String GP_OPTION_MALE_UID = MODULE_ID + ".femaleOptionUID";
 	
 }

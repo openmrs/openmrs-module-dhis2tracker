@@ -44,7 +44,7 @@ public class Dhis2TrackerActivator extends BaseModuleActivator implements Daemon
 	@Override
 	public void started() {
 		
-		log.info("Registering case reports listener");
+		log.info("Registering dhis2 tracker listener");
 		
 		eventListener = new CaseReportEventListener(daemonToken);
 		Event.subscribe(CLAZZ, ACTION.name(), eventListener);
@@ -56,7 +56,7 @@ public class Dhis2TrackerActivator extends BaseModuleActivator implements Daemon
 	@Override
 	public void stopped() {
 		
-		log.info("Removing case reports listener");
+		log.info("Removing dhis2 tracker listener");
 		
 		Event.unsubscribe(CLAZZ, ACTION, eventListener);
 	}

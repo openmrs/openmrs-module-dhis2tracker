@@ -58,7 +58,6 @@ public class Dhis2HttpClient {
 	 */
 	public String registerAndEnroll(Patient patient, Date incidentDate) throws IOException {
 		String data = Dhis2Utils.buildRegisterAndEnrollContent(patient, incidentDate);
-		log.warn("\n\n" + data + "\n\n");
 		Dhis2Response response = post(RESOURCE_TRACKED_ENTITY_INSTANCES, data, true);
 		if (!isSuccessful(response)) {
 			throw new APIException("Registration of patient with id: " + patient.getId() + " was not successful");
@@ -75,7 +74,6 @@ public class Dhis2HttpClient {
 	 * @return true if the event are successfully sent otherwise false;
 	 */
 	public boolean sendEvents(List<TriggerEvent> events) throws IOException {
-		//wAlixVBAyG2Object data = Dhis2Utils.buildEventContent(events);
 		Dhis2Response response = post(RESOURCE_EVENTS, "", false);
 		if (!isSuccessful(response)) {
 			throw new APIException("Send of events to DHIS2 was not successful");

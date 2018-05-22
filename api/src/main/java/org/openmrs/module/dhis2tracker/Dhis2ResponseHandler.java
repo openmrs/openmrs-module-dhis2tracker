@@ -43,7 +43,6 @@ public class Dhis2ResponseHandler implements ResponseHandler<Dhis2Response> {
 	private Dhis2Response handleEntity(HttpEntity httpEntity) throws IOException {
 		log.debug("Unmarshalling the response contents");
 		String json = EntityUtils.toString(httpEntity);
-		log.warn("Response Json: " + json);
 		
 		return mapper.readValue(json, Dhis2Response.class);
 	}

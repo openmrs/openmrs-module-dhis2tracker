@@ -46,17 +46,11 @@ public class CaseReportEventListener implements EventListener {
 			@Override
 			public void run() {
 				
-				boolean successful = false;
-				
 				try {
-					successful = processMessage(message);
+					processMessage(message);
 				}
 				catch (Exception e) {
 					log.error("An error occurred while processing case report encounter", e);
-				}
-				
-				if (!successful) {
-					log.error("Failed to process case report encounter");
 				}
 				
 			}
@@ -78,7 +72,13 @@ public class CaseReportEventListener implements EventListener {
 		String encUuid = mm.getString("uuid");
 		Encounter encounter = Context.getEncounterService().getEncounterByUuid(encUuid);
 		if (Dhis2TrackerConstants.LOINC_CODE_CASE_REPORT.equals(encounter.getEncounterType().getName())) {
-			return EncounterProcessor.newInstance().process(encounter);
+			boolean isSuccess = EncounterProcessor.newInstance().process(encounter);
+			if (!isSuccess) {
+				log.error("Failed to process case report encounter");
+			}
+			return isSuccess;
+		} else {
+			log.debug("Ignoring non case report encounter");
 		}
 		
 		return false;

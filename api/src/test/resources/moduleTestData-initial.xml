@@ -19,11 +19,12 @@
     <global_property property="dhis2tracker.orgUnitUID" property_value="h8EQM4sO9pG" uuid="6a55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.trackedEntityTypeUID" property_value="MCPQUTHX1Ze" uuid="4f55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.programUID" property_value="swsazZ6lZ5P" uuid="5f55827e-26fe-103b-80cb-0017a47871b3" />
-    <global_property property="dhis2tracker.newHivCaseProgramStateUID" property_value="PxdFleddGUk" uuid="6f55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.firstnameUID" property_value="kx1JDKqLdqV" uuid="7f55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.middlenameUID" property_value="yASg4z58okh" uuid="8f55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.lastnameAttributeUID" property_value="kvkIr4Etq09" uuid="9f55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.genderAttributeUID" property_value="ygL42trGhmu" uuid="0a55827e-26fe-103b-80cb-0017a47871b3" />
+    <global_property property="dhis2tracker.maleOptionUID" property_value="1" uuid="0b55827e-26fe-103b-80cb-0017a47871b3" />
+    <global_property property="dhis2tracker.femaleOptionUID" property_value="2" uuid="0c55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.birthdateUID" property_value="lWLdcQLgpSz" uuid="1a55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.personIdUID" property_value="TtGmkcE74ww" uuid="2a55827e-26fe-103b-80cb-0017a47871b3" />
     <global_property property="dhis2tracker.dateOfHivDiagnosisUID" property_value="INtCa4ICkXo" uuid="3a55827e-26fe-103b-80cb-0017a47871b3" />

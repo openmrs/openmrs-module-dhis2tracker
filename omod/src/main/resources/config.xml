@@ -27,9 +27,9 @@
 	
 	<!-- Required Modules -->
     <require_modules>
-        <require_module version="${eventVersion}">${project.parent.groupId}.${project.parent.artifactId}</require_module>
+        <require_module version="${eventVersion}">org.openmrs.event</require_module>
     </require_modules>
-	
+
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.Dhis2TrackerActivator</activator>
 
@@ -52,6 +52,106 @@
 	</messages>
 
     <!-- GPs -->
+    <globalProperty>
+        <property>${project.parent.artifactId}.dhis2Url</property>
+        <description>The URL of the DHIS2 instance</description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.username</property>
+        <description>
+            The username of the user account with the appropriate privileges in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.password</property>
+        <description>
+            The password of the user account in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.orgUnitUID</property>
+        <defaultValue>h8EQM4sO9pG</defaultValue>
+        <description>
+            This instances Org Unit UID in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.trackedEntityTypeUID</property>
+        <defaultValue>MCPQUTHX1Ze</defaultValue>
+        <description>
+            The UID of the tracked entity representing patients in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.programUID</property>
+        <defaultValue>swsazZ6lZ5P</defaultValue>
+        <description>
+            The UID of the program in which to enroll patients in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.firstnameUID</property>
+        <defaultValue>kx1JDKqLdqV</defaultValue>
+        <description>
+            The UID of the first name tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.middlenameUID</property>
+        <defaultValue>yASg4z58okh</defaultValue>
+        <description>
+            The UID of the middle name tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.lastnameAttributeUID</property>
+        <defaultValue>kvkIr4Etq09</defaultValue>
+        <description>
+            The UID of the last name tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.genderAttributeUID</property>
+        <defaultValue>ygL42trGhmu</defaultValue>
+        <description>
+            The UID of the gender tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.maleOptionUID</property>
+        <defaultValue>1</defaultValue>
+        <description>
+            The UID of the male option in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.femaleOptionUID</property>
+        <defaultValue>2</defaultValue>
+        <description>
+            The UID of the female option in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.birthdateUID</property>
+        <defaultValue>lWLdcQLgpSz</defaultValue>
+        <description>
+            The UID of the birth date tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.personIdUID</property>
+        <defaultValue>TtGmkcE74ww</defaultValue>
+        <description>
+            The UID of the person ID tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>${project.parent.artifactId}.dateOfHivDiagnosisUID</property>
+        <defaultValue>INtCa4ICkXo</defaultValue>
+        <description>
+            The UID for the date of HIV diagnosis tracked entity attribute in the DHIS2 instance
+        </description>
+    </globalProperty>
 
     <!-- Privileges -->
 

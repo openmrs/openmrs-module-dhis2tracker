@@ -19,7 +19,7 @@
 	<artifactId>dhis2tracker</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Dhis2 Tracker Module</name>
+	<name>Dhis2 Tracker</name>
 	<description>
         Provides functionality for submitting patient case report data to DHIS2 tracker
     </description>
