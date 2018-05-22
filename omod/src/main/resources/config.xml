@@ -53,6 +53,15 @@
 
     <!-- GPs -->
     <globalProperty>
+        <property>${project.parent.artifactId}.publicHealthCaseReportConcept</property>
+        <defaultValue>LOINC:55751-2</defaultValue>
+        <description>
+            Specifies the mapping for the concept that represents a public health case report,
+            this should be the same concept as that configured in the submitting OpenMRS instances,
+            a valid value MUST be of the form source_name:code e.g LOINC:55751-2
+        </description>
+    </globalProperty>
+    <globalProperty>
         <property>${project.parent.artifactId}.dhis2Url</property>
         <description>The URL of the DHIS2 instance</description>
     </globalProperty>

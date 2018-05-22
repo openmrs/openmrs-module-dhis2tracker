@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -84,10 +86,6 @@ public class Dhis2Utils {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_PROGRAM_UID);
 	}
 	
-	public static String getNewHivCaseProgramStateUID() {
-		return getGlobalProperty(Dhis2TrackerConstants.GP_PROGRAM_STATE_UID);
-	}
-	
 	public static String getFirstnameUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_FIRSTNAME_UID);
 	}
@@ -114,6 +112,29 @@ public class Dhis2Utils {
 	
 	public static String getDateOfDiagnosisUID() {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_ATTRIB_DATE_OF_HIV_DIAGNOSIS_UID);
+	}
+	
+	public static String getCaseReportEncounterTypeName() {
+		String mapping = getGlobalProperty(Dhis2TrackerConstants.GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR);
+		if (StringUtils.isBlank(mapping)) {
+			throw new APIException(
+			        Dhis2TrackerConstants.GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR + " global property value is required");
+		}
+		
+		String[] fields = StringUtils.split(mapping, ":");
+		if (fields.length != 2) {
+			throw new APIException("Invalid value for the " + Dhis2TrackerConstants.GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR
+			        + " global property");
+		}
+		
+		final String code = fields[1];
+		final String source = fields[0];
+		Concept concept = Context.getConceptService().getConceptByMapping(code, source);
+		if (concept == null) {
+			throw new APIException("No concept found with a mapping to source: " + source + " and code: " + code);
+		}
+		
+		return concept.getName().getName();
 	}
 	
 	/**

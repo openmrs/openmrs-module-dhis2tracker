@@ -10,9 +10,11 @@
 package org.openmrs.module.dhis2tracker;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.jms.MapMessage;
 
@@ -21,10 +23,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.openmrs.Concept;
+import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.powermock.api.mockito.PowerMockito;
@@ -36,12 +41,23 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class CaseReportEventListenerTest {
 	
 	@Mock
+	private AdministrationService as;
+	
+	@Mock
+	private ConceptService cs;
+	
+	@Mock
 	private EncounterService es;
 	
 	@Mock
 	private EncounterProcessor ep;
 	
+	@Mock
+	private Concept caseReportConcept;
+	
 	private CaseReportEventListener listener = new CaseReportEventListener(null);
+	
+	private EncounterType caseReportEncounterType;
 	
 	@Before
 	public void before() throws IOException {
@@ -49,15 +65,26 @@ public class CaseReportEventListenerTest {
 		PowerMockito.mockStatic(EncounterProcessor.class);
 		when(EncounterProcessor.newInstance()).thenReturn(ep);
 		when(ep.process(any(Encounter.class))).thenReturn(true);
+		when(Context.getAdministrationService()).thenReturn(as);
+		when(Context.getEncounterService()).thenReturn(es);
+		when(Context.getConceptService()).thenReturn(cs);
+		final String code = "LOINC";
+		final String source = "55751-2";
+		final String conceptAndEncounterTypeName = "Public health Case report";
+		when(as.getGlobalProperty(eq(Dhis2TrackerConstants.GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR)))
+		        .thenReturn(source + ":" + code);
+		when(cs.getConceptByMapping(eq(code), eq(source))).thenReturn(caseReportConcept);
+		when(caseReportConcept.getName()).thenReturn(new ConceptName(conceptAndEncounterTypeName, Locale.ENGLISH));
+		caseReportEncounterType = new EncounterType();
+		caseReportEncounterType.setName(conceptAndEncounterTypeName);
+		when(es.getEncounterType(eq(conceptAndEncounterTypeName))).thenReturn(caseReportEncounterType);
 	}
 	
 	@Test
 	public void processMessage_shouldProcessMessageIfTheEncounterIsOfTheCaseReportEncounterType() throws Exception {
-		EncounterType encType = new EncounterType();
-		encType.setName(Dhis2TrackerConstants.LOINC_CODE_CASE_REPORT);
 		Encounter enc = new Encounter();
-		enc.setEncounterType(encType);
-		when(es.getEncounterByUuid(Matchers.eq(enc.getUuid()))).thenReturn(enc);
+		enc.setEncounterType(caseReportEncounterType);
+		when(es.getEncounterByUuid(eq(enc.getUuid()))).thenReturn(enc);
 		when(Context.getEncounterService()).thenReturn(es);
 		
 		MapMessage message = new ActiveMQMapMessage();
@@ -71,8 +98,7 @@ public class CaseReportEventListenerTest {
 		encType.setName("Some encounter type");
 		Encounter enc = new Encounter();
 		enc.setEncounterType(encType);
-		when(es.getEncounterByUuid(Matchers.eq(enc.getUuid()))).thenReturn(enc);
-		when(Context.getEncounterService()).thenReturn(es);
+		when(es.getEncounterByUuid(eq(enc.getUuid()))).thenReturn(enc);
 		
 		MapMessage message = new ActiveMQMapMessage();
 		message.setString("uuid", enc.getUuid());

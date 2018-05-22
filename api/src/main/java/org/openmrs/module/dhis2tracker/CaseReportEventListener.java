@@ -71,7 +71,8 @@ public class CaseReportEventListener implements EventListener {
 		MapMessage mm = (MapMessage) message;
 		String encUuid = mm.getString("uuid");
 		Encounter encounter = Context.getEncounterService().getEncounterByUuid(encUuid);
-		if (Dhis2TrackerConstants.LOINC_CODE_CASE_REPORT.equals(encounter.getEncounterType().getName())) {
+		String encTypeName = Dhis2Utils.getCaseReportEncounterTypeName();
+		if (encTypeName.equals(encounter.getEncounterType().getName())) {
 			boolean isSuccess = EncounterProcessor.newInstance().process(encounter);
 			if (!isSuccess) {
 				log.error("Failed to process case report encounter");

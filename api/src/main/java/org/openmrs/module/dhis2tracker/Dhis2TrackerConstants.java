@@ -28,13 +28,13 @@ public class Dhis2TrackerConstants {
 	
 	public static final String CONTENT_TYPE_XML = "application/xml";
 	
-	public static final String LOINC_CODE_CASE_REPORT = "55751-2";
-	
 	public static final String PERSON_ATTRIBUTE_TYPE_UUID = "ab1e48f4-5528-11e8-9ed7-c05155b794c3";
 	
 	public static final String TRIGGER_CONCEPT_SOURCE = "SNOMED CT";
 	
 	public static final String TRIGGER_CONCEPT_CODE = "410658008";
+	
+	public static final String GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR = MODULE_ID + ".publicHealthCaseReportConcept";
 	
 	public static final String GP_URL = MODULE_ID + ".dhis2Url";
 	
@@ -47,8 +47,6 @@ public class Dhis2TrackerConstants {
 	public static final String GP_TRACKED_ENTITY_TYPE_UID = MODULE_ID + ".trackedEntityTypeUID";
 	
 	public static final String GP_PROGRAM_UID = MODULE_ID + ".programUID";
-	
-	public static final String GP_PROGRAM_STATE_UID = MODULE_ID + ".newHivCaseProgramStateUID";
 	
 	public static final String GP_ATTRIB_FIRSTNAME_UID = MODULE_ID + ".firstnameUID";
 	
@@ -63,9 +61,9 @@ public class Dhis2TrackerConstants {
 	public static final String GP_ATTRIB_PERSON_ID_UID = MODULE_ID + ".personIdUID";
 	
 	public static final String GP_ATTRIB_DATE_OF_HIV_DIAGNOSIS_UID = MODULE_ID + ".dateOfHivDiagnosisUID";
-
-    public static final String GP_OPTION_FEMALE_UID = MODULE_ID + ".maleOptionUID";
-
-    public static final String GP_OPTION_MALE_UID = MODULE_ID + ".femaleOptionUID";
+	
+	public static final String GP_OPTION_FEMALE_UID = MODULE_ID + ".maleOptionUID";
+	
+	public static final String GP_OPTION_MALE_UID = MODULE_ID + ".femaleOptionUID";
 	
 }
