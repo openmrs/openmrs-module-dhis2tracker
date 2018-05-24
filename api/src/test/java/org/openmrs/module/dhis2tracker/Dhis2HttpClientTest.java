@@ -16,6 +16,7 @@ import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DATE_FORMATTER;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_ACCEPT;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_CONTENT_TYPE;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PARAMS_ID_SCHEMES;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -29,7 +30,9 @@ import org.apache.http.HttpStatus;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.openmrs.Encounter;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonName;
@@ -97,13 +100,13 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		
 		final int sc = withSuccessResponse ? HttpStatus.SC_OK : HttpStatus.SC_INTERNAL_SERVER_ERROR;
 		final String contentType = isRegistration ? CONTENT_TYPE_JSON : CONTENT_TYPE_XML;
-		WireMock.stubFor(
-		    WireMock.post(WireMock.urlEqualTo("/" + resource)).withHeader(HEADER_ACCEPT, containing(CONTENT_TYPE_JSON))
-		            .withHeader(HEADER_CONTENT_TYPE, containing(contentType))
-		            //.withRequestBody(containing(""))
-		            .withBasicAuth("fake user", "fake password")
-		            .willReturn(WireMock.aResponse().withStatus(sc).withHeader("Content-Type", CONTENT_TYPE_JSON)
-		                    .withBody(getResponse(isRegistration, withSuccessResponse))));
+		WireMock.stubFor(WireMock.post(WireMock.urlEqualTo("/" + resource + "?" + PARAMS_ID_SCHEMES))
+		        .withHeader(HEADER_ACCEPT, containing(CONTENT_TYPE_JSON))
+		        .withHeader(HEADER_CONTENT_TYPE, containing(contentType))
+		        //.withRequestBody(containing(""))
+		        .withBasicAuth("fake user", "fake password")
+		        .willReturn(WireMock.aResponse().withStatus(sc).withHeader("Content-Type", CONTENT_TYPE_JSON)
+		                .withBody(getResponse(isRegistration, withSuccessResponse))));
 	}
 	
 	@Test
@@ -118,7 +121,12 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		Date incidenceDate = DATE_FORMATTER.parse("2018-04-21");
 		setDhis2Port(DHIS2_PORT);
 		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, true);
-		String json = Dhis2Utils.buildRegisterAndEnrollContent(p, incidenceDate);
+		Encounter e = new Encounter();
+		Location location = Context.getLocationService().getLocation(200);
+		e.setPatient(p);
+		e.setEncounterDatetime(incidenceDate);
+		e.setLocation(location);
+		String json = Dhis2Utils.buildRegisterAndEnrollContent(e);
 		String uid = dhis2HttpClient.registerAndEnroll(json);
 		assertEquals(expectedUid, uid);
 	}

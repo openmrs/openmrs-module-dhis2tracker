@@ -99,7 +99,7 @@ public class EncounterProcessorTest {
 		when(Dhis2HttpClient.newInstance()).thenReturn(dhis2HttpClient);
 		//TODO the ArgumentMatcher should be the expected generated json
 		final String json = "expectedJson";
-		when(Dhis2Utils.buildRegisterAndEnrollContent(eq(p), eq(e.getEncounterDatetime()))).thenReturn(json);
+		when(Dhis2Utils.buildRegisterAndEnrollContent(eq(e))).thenReturn(json);
 		when(dhis2HttpClient.registerAndEnroll(eq(json))).thenReturn(expectedUid);
 		
 		//when(dhis2HttpClient.sendEvents(argThat(new ListMatcher(events)))).thenReturn(true);

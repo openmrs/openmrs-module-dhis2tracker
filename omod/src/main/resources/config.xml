@@ -80,13 +80,6 @@
         </description>
     </globalProperty>
     <globalProperty>
-        <property>${project.parent.artifactId}.orgUnitUID</property>
-        <defaultValue>h8EQM4sO9pG</defaultValue>
-        <description>
-            This instances Org Unit UID in the DHIS2 instance
-        </description>
-    </globalProperty>
-    <globalProperty>
         <property>${project.parent.artifactId}.trackedEntityTypeUID</property>
         <defaultValue>MCPQUTHX1Ze</defaultValue>
         <description>

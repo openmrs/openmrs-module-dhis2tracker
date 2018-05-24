@@ -14,6 +14,7 @@ import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_ACCEPT;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_AUTH;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_CONTENT_TYPE;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PARAMS_ID_SCHEMES;
 
 import java.io.IOException;
 
@@ -83,7 +84,7 @@ public class Dhis2HttpClient {
 		String username = Dhis2Utils.getUsername();
 		String password = Dhis2Utils.getPassword();
 		url = url.endsWith("/") ? url : url + "/";
-		HttpPost post = new HttpPost(url + resource);
+		HttpPost post = new HttpPost(url + resource + "?" + PARAMS_ID_SCHEMES);
 		post.setEntity(new StringEntity(jsonContent));
 		post.addHeader(HEADER_ACCEPT, CONTENT_TYPE_JSON);
 		post.addHeader(HEADER_CONTENT_TYPE, isRegistration ? CONTENT_TYPE_JSON : CONTENT_TYPE_XML);

@@ -24,6 +24,8 @@ public class Dhis2TrackerConstants {
 	
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	
+	public static final String PARAMS_ID_SCHEMES = "orgUnitIdScheme=CODE";
+	
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	
 	public static final String CONTENT_TYPE_XML = "application/xml";
@@ -43,8 +45,6 @@ public class Dhis2TrackerConstants {
 	public static final String GP_USERNAME = MODULE_ID + ".username";
 	
 	public static final String GP_PASSWORD = MODULE_ID + ".password";
-	
-	public static final String GP_ORG_UNIT_UID = MODULE_ID + ".orgUnitUID";
 	
 	public static final String GP_TRACKED_ENTITY_TYPE_UID = MODULE_ID + ".trackedEntityTypeUID";
 	

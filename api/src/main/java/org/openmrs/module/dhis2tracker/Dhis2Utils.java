@@ -9,15 +9,21 @@
  */
 package org.openmrs.module.dhis2tracker;
 
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.Encounter;
+import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dhis2tracker.model.Attribute;
 import org.openmrs.module.dhis2tracker.model.Enrollment;
@@ -27,7 +33,8 @@ public class Dhis2Utils {
 	
 	private static final ObjectMapper mapper = new ObjectMapper();
 	
-	public static String buildRegisterAndEnrollContent(Patient patient, Date date) throws IOException {
+	public static String buildRegisterAndEnrollContent(Encounter e) throws IOException {
+		Patient patient = e.getPatient();
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(getPersonIdUID(), patient.getPatientIdentifier().getIdentifier()));
 		attributes.add(new Attribute(getFirstnameUID(), patient.getGivenName()));
@@ -44,11 +51,11 @@ public class Dhis2Utils {
 			throw new APIException("Unknown gender '" + patient.getGender() + "' for patient with id: " + patient.getId());
 		}
 		attributes.add(new Attribute(Dhis2Utils.getGenderUID(), gender));
-		String incidentDate = Dhis2TrackerConstants.DATE_FORMATTER.format(date);
+		String incidentDate = Dhis2TrackerConstants.DATE_FORMATTER.format(e.getEncounterDatetime());
 		attributes.add(new Attribute(Dhis2Utils.getDateOfDiagnosisUID(), incidentDate));
 		Enrollment enrollment = new Enrollment(Dhis2Utils.getProgramUID(), incidentDate);
-		RegisterAndEnroll ene = new RegisterAndEnroll(Dhis2Utils.getTrackedEntityTypeUID(), Dhis2Utils.getOrgUnitUID(),
-		        attributes, enrollment);
+		RegisterAndEnroll ene = new RegisterAndEnroll(Dhis2Utils.getTrackedEntityTypeUID(),
+		        Dhis2Utils.getOrgUnitCode(e.getLocation()), attributes, enrollment);
 		
 		return mapper.writeValueAsString(ene);
 	}
@@ -73,8 +80,19 @@ public class Dhis2Utils {
 		return getGlobalProperty(Dhis2TrackerConstants.GP_PASSWORD);
 	}
 	
-	public static String getOrgUnitUID() {
-		return getGlobalProperty(Dhis2TrackerConstants.GP_ORG_UNIT_UID);
+	public static String getOrgUnitCode(Location location) {
+		LocationService ls = Context.getLocationService();
+		LocationAttributeType lat = ls.getLocationAttributeTypeByName(EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME);
+		if (lat == null) {
+			throw new APIException("No location attribute type with name: " + EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME);
+		}
+		for (LocationAttribute la : location.getActiveAttributes()) {
+			if (lat.equals(la.getAttributeType())) {
+				return la.getValueReference().toString();
+			}
+		}
+		
+		throw new APIException("Case report source location has no external Id attribute");
 	}
 	
 	public static String getTrackedEntityTypeUID() {

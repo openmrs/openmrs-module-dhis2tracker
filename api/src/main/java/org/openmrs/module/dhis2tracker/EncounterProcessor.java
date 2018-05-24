@@ -64,7 +64,7 @@ public class EncounterProcessor {
 			log.debug("Registering and enrolling the patient with id " + patient.getId() + " in DHIS2");
 			//Register and enroll the patient in the program
 			try {
-				String data = Dhis2Utils.buildRegisterAndEnrollContent(patient, encounter.getEncounterDatetime());
+				String data = Dhis2Utils.buildRegisterAndEnrollContent(encounter);
 				String patientUid = dhis2HttpClient.registerAndEnroll(data);
 				patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
 				ps.savePerson(patient);
