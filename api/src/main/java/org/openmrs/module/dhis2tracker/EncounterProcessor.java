@@ -12,8 +12,6 @@ package org.openmrs.module.dhis2tracker;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PERSON_ATTRIBUTE_TYPE_UUID;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -76,8 +74,10 @@ public class EncounterProcessor {
 			}
 		}
 		
+		return true;
+		
 		//TODO look up trigger concept GP
-		List<TriggerEvent> events = new ArrayList<>();
+		/*List<TriggerEvent> events = new ArrayList<>();
 		for (Obs obs : encounter.getObs()) {
 			if (isTriggerObs(obs)) {
 				events.add(new TriggerEvent(obs));
@@ -92,7 +92,7 @@ public class EncounterProcessor {
 		catch (IOException e) {
 			log.error("Failed to submit event(s) to DHIS2 for patient with id: " + patient.getId());
 			return false;
-		}
+		}*/
 	}
 	
 	private boolean isTriggerObs(Obs obs) {

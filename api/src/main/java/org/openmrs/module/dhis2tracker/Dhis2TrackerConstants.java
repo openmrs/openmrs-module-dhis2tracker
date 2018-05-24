@@ -34,6 +34,8 @@ public class Dhis2TrackerConstants {
 	
 	public static final String TRIGGER_CONCEPT_CODE = "410658008";
 	
+	public static final String EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME = "ExternalId";
+	
 	public static final String GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR = MODULE_ID + ".publicHealthCaseReportConcept";
 	
 	public static final String GP_URL = MODULE_ID + ".dhis2Url";
