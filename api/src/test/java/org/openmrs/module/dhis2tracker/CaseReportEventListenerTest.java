@@ -29,7 +29,6 @@ import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.powermock.api.mockito.PowerMockito;
@@ -42,9 +41,6 @@ public class CaseReportEventListenerTest {
 	
 	@Mock
 	private AdministrationService as;
-	
-	@Mock
-	private ConceptService cs;
 	
 	@Mock
 	private EncounterService es;
@@ -67,13 +63,9 @@ public class CaseReportEventListenerTest {
 		when(ep.process(any(Encounter.class))).thenReturn(true);
 		when(Context.getAdministrationService()).thenReturn(as);
 		when(Context.getEncounterService()).thenReturn(es);
-		when(Context.getConceptService()).thenReturn(cs);
-		final String code = "LOINC";
-		final String source = "55751-2";
 		final String conceptAndEncounterTypeName = "Public health Case report";
-		when(as.getGlobalProperty(eq(Dhis2TrackerConstants.GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR)))
-		        .thenReturn(source + ":" + code);
-		when(cs.getConceptByMapping(eq(code), eq(source))).thenReturn(caseReportConcept);
+		when(as.getGlobalProperty(eq(Dhis2TrackerConstants.GP_CR_ENCOUNTER_TYPE_NAME)))
+		        .thenReturn(conceptAndEncounterTypeName);
 		when(caseReportConcept.getName()).thenReturn(new ConceptName(conceptAndEncounterTypeName, Locale.ENGLISH));
 		caseReportEncounterType = new EncounterType();
 		caseReportEncounterType.setName(conceptAndEncounterTypeName);

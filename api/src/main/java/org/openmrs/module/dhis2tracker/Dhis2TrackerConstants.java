@@ -36,7 +36,7 @@ public class Dhis2TrackerConstants {
 	
 	public static final String EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME = "ExternalId";
 	
-	public static final String GP_CONCEPT_MAPPING_PUBLIC_HEALTH_CR = MODULE_ID + ".publicHealthCaseReportConcept";
+	public static final String GP_CR_ENCOUNTER_TYPE_NAME = MODULE_ID + ".caseReportEncounterTypeName";
 	
 	public static final String GP_URL = MODULE_ID + ".dhis2Url";
 	
