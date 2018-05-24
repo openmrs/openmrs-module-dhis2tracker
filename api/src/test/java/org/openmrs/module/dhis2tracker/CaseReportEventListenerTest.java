@@ -14,7 +14,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.jms.MapMessage;
 
@@ -24,8 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openmrs.Concept;
-import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.api.AdministrationService;
@@ -48,9 +45,6 @@ public class CaseReportEventListenerTest {
 	@Mock
 	private EncounterProcessor ep;
 	
-	@Mock
-	private Concept caseReportConcept;
-	
 	private CaseReportEventListener listener = new CaseReportEventListener(null);
 	
 	private EncounterType caseReportEncounterType;
@@ -66,7 +60,6 @@ public class CaseReportEventListenerTest {
 		final String conceptAndEncounterTypeName = "Public health Case report";
 		when(as.getGlobalProperty(eq(Dhis2TrackerConstants.GP_CR_ENCOUNTER_TYPE_NAME)))
 		        .thenReturn(conceptAndEncounterTypeName);
-		when(caseReportConcept.getName()).thenReturn(new ConceptName(conceptAndEncounterTypeName, Locale.ENGLISH));
 		caseReportEncounterType = new EncounterType();
 		caseReportEncounterType.setName(conceptAndEncounterTypeName);
 		when(es.getEncounterType(eq(conceptAndEncounterTypeName))).thenReturn(caseReportEncounterType);
