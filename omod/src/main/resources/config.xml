@@ -53,12 +53,14 @@
 
     <!-- GPs -->
     <globalProperty>
-        <property>${project.parent.artifactId}.publicHealthCaseReportConcept</property>
-        <defaultValue>LOINC:55751-2</defaultValue>
+        <property>${project.parent.artifactId}.caseReportEncounterTypeName</property>
+        <defaultValue>Public health Case report</defaultValue>
         <description>
-            Specifies the mapping for the concept that represents a public health case report,
-            this should be the same concept as that configured in the submitting OpenMRS instances,
-            a valid value MUST be of the form source_name:code e.g LOINC:55751-2
+            Specifies the name of the encounter type to use for encounters created whenever a public health
+            case report is received, the value MUST match the name (last) field of the configured value for the
+            global property named &lt;t&gt;casereport.publicHealthCaseReportConcept&lt;/t&gt; in the submitting
+            OpenMRS instance(s), there is an assumption that the same concept was set in all the submitting OpenMRS
+            instances in case of more than one.
         </description>
     </globalProperty>
     <globalProperty>

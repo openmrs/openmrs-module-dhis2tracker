@@ -47,6 +47,10 @@ public class CaseReportEventListener implements EventListener {
 			public void run() {
 				
 				try {
+				    //TODO in theory we want to save this event to the DB
+                    //before we submit it for tracking purposes and also just in case the
+                    //submission fails we can try again later.
+                    //saveCaseReport();
 					processMessage(message);
 				}
 				catch (Exception e) {
