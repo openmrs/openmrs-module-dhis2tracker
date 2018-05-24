@@ -44,6 +44,7 @@ public class Dhis2ResponseHandler implements ResponseHandler<Dhis2Response> {
 		log.debug("Unmarshalling the response contents");
 		String json = EntityUtils.toString(httpEntity);
 		
+		log.debug("\nResponse: " + json);
 		return mapper.readValue(json, Dhis2Response.class);
 	}
 	
