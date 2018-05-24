@@ -64,7 +64,8 @@ public class EncounterProcessor {
 			log.debug("Registering and enrolling the patient with id " + patient.getId() + " in DHIS2");
 			//Register and enroll the patient in the program
 			try {
-				String patientUid = dhis2HttpClient.registerAndEnroll(patient, encounter.getEncounterDatetime());
+				String data = Dhis2Utils.buildRegisterAndEnrollContent(patient, encounter.getEncounterDatetime());
+				String patientUid = dhis2HttpClient.registerAndEnroll(data);
 				patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
 				ps.savePerson(patient);
 			}
@@ -87,7 +88,8 @@ public class EncounterProcessor {
 		log.debug("Sending event(s) to DHIS2");
 		
 		try {
-			return dhis2HttpClient.sendEvents(events);
+			String data = Dhis2Utils.buildEventsContent(encounter.getObs());
+			return dhis2HttpClient.sendEvents(data);
 		}
 		catch (IOException e) {
 			log.error("Failed to submit event(s) to DHIS2 for patient with id: " + patient.getId());

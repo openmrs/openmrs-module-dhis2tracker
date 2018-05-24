@@ -16,8 +16,6 @@ import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_AUTH;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_CONTENT_TYPE;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -27,7 +25,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.module.dhis2tracker.model.Dhis2Response;
 import org.openmrs.module.dhis2tracker.model.ImportSummary;
@@ -52,15 +49,13 @@ public class Dhis2HttpClient {
 	/**
 	 * Registers the specified patient in DHIS2 and enrolls them in the program
 	 *
-	 * @param patient the patient ro register and enroll
-	 * @param incidentDate The date of occurrence of the incidence
+	 * @param data the json data to post
 	 * @return the generated UID of the patient in DHIS2
 	 */
-	public String registerAndEnroll(Patient patient, Date incidentDate) throws IOException {
-		String data = Dhis2Utils.buildRegisterAndEnrollContent(patient, incidentDate);
+	public String registerAndEnroll(String data) throws IOException {
 		Dhis2Response response = post(RESOURCE_TRACKED_ENTITY_INSTANCES, data, true);
 		if (!isSuccessful(response)) {
-			throw new APIException("Registration of patient with id: " + patient.getId() + " was not successful");
+			throw new APIException("Registration of patient was not successful");
 		}
 		log.debug("Extracting generated the UID of the registered patient");
 		
@@ -70,11 +65,11 @@ public class Dhis2HttpClient {
 	/**
 	 * Sends the specified events to DHIS tracker
 	 *
-	 * @param events the events to send
+	 * @param data the json data to post
 	 * @return true if the event are successfully sent otherwise false;
 	 */
-	public boolean sendEvents(List<TriggerEvent> events) throws IOException {
-		Dhis2Response response = post(RESOURCE_EVENTS, "", false);
+	public boolean sendEvents(String data) throws IOException {
+		Dhis2Response response = post(RESOURCE_EVENTS, data, false);
 		if (!isSuccessful(response)) {
 			throw new APIException("Send of events to DHIS2 was not successful");
 		}
