@@ -54,12 +54,14 @@ public class EncounterProcessor {
 		log.debug("Processing encounter");
 		if (!hasNewHivCaseEvent(encounter)) {
 			log.debug("Ignoring case report encounter with no new HIV case");
+			//TODO add unit test
 			return IGNORED;
 		}
 		
 		PersonService ps = Context.getPersonService();
 		PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(PERSON_ATTRIBUTE_TYPE_UUID);
 		if (uidAttributeType == null) {
+			//TODO add unit test
 			log.error("Cannot find person attribute type for dhis2 uid");
 			return FAILED;
 		}
@@ -81,10 +83,12 @@ public class EncounterProcessor {
 				return PASSED;
 			}
 			catch (IOException e) {
+				//TODO add unit test
 				log.error("Failed to register and enroll the patient with id " + patient.getId() + " in DHIS2", e);
 			}
 		} else {
 			log.debug("Patient with id " + patient.getId() + " is already registered and enrolled in DHIS2");
+			//TODO add unit test
 			return IGNORED;
 		}
 		
