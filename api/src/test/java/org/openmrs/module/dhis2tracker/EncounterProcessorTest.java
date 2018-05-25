@@ -74,7 +74,12 @@ public class EncounterProcessorTest {
 		Obs newHivCase = new Obs();
 		newHivCase.setConcept(triggerConcept);
 		newHivCase.setObsDatetime(new Date());
-		newHivCase.setValueCoded(createConcept("New HIV Case"));
+		Concept valueConcept = createConcept("New HIV Case");
+		ConceptSource source = new ConceptSource();
+		source.setHl7Code(Dhis2TrackerConstants.CODE_SYSTEM_CIEL);
+		ConceptReferenceTerm term = new ConceptReferenceTerm(source, Dhis2TrackerConstants.CIEL_CODE_NEW_HIV_CASE, null);
+		valueConcept.addConceptMapping(new ConceptMap(term, new ConceptMapType()));
+		newHivCase.setValueCoded(valueConcept);
 		Obs newDisease = new Obs();
 		newDisease.setConcept(triggerConcept);
 		newDisease.setValueCoded(createConcept("New HIV Disease"));
@@ -152,16 +157,17 @@ public class EncounterProcessorTest {
 	}
 	
 	private Concept createTriggerConcept() {
-		return createConcept("Trigger");
+		Concept c = createConcept("Trigger");
+		ConceptSource source = new ConceptSource();
+		source.setHl7Code(Dhis2TrackerConstants.TRIGGER_CONCEPT_SOURCE);
+		ConceptReferenceTerm term = new ConceptReferenceTerm(source, Dhis2TrackerConstants.TRIGGER_CONCEPT_CODE, null);
+		c.addConceptMapping(new ConceptMap(term, new ConceptMapType()));
+		return c;
 	}
 	
 	private Concept createConcept(String conceptName) {
 		Concept c = new Concept();
 		c.addName(new ConceptName(conceptName, en));
-		ConceptSource source = new ConceptSource();
-		source.setHl7Code(Dhis2TrackerConstants.TRIGGER_CONCEPT_SOURCE);
-		ConceptReferenceTerm term = new ConceptReferenceTerm(source, Dhis2TrackerConstants.TRIGGER_CONCEPT_CODE, null);
-		c.addConceptMapping(new ConceptMap(term, new ConceptMapType()));
 		return c;
 	}
 	

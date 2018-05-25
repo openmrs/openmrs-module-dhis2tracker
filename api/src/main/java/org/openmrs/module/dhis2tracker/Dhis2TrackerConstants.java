@@ -30,6 +30,10 @@ public class Dhis2TrackerConstants {
 	
 	public static final String CONTENT_TYPE_XML = "application/xml";
 	
+	public static final String CODE_SYSTEM_CIEL = "2.16.840.1.113883.3.7201";
+	
+	public static final String CIEL_CODE_NEW_HIV_CASE = "138571";
+	
 	public static final String PERSON_ATTRIBUTE_TYPE_UUID = "ab1e48f4-5528-11e8-9ed7-c05155b794c3";
 	
 	public static final String TRIGGER_CONCEPT_SOURCE = "SNOMED CT";

@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.dhis2tracker;
 
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CIEL_CODE_NEW_HIV_CASE;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CODE_SYSTEM_CIEL;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PERSON_ATTRIBUTE_TYPE_UUID;
 
 import java.io.IOException;
@@ -48,6 +50,11 @@ public class EncounterProcessor {
 	 */
 	public boolean process(Encounter encounter) {
 		log.debug("Processing encounter");
+		if (!hasNewHivCaseEvent(encounter)) {
+			log.debug("Ignoring case report encounter with no new HIV case");
+			return false;
+		}
+		
 		PersonService ps = Context.getPersonService();
 		PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(PERSON_ATTRIBUTE_TYPE_UUID);
 		if (uidAttributeType == null) {
@@ -97,6 +104,24 @@ public class EncounterProcessor {
 		}*/
 	}
 	
+	private boolean hasNewHivCaseEvent(Encounter e) {
+		for (Obs o : e.getObs()) {
+			Concept codedValue = o.getValueCoded();
+			if (codedValue == null) {
+				continue;
+			}
+			for (ConceptMap map : codedValue.getConceptMappings()) {
+				String hl7Code = map.getConceptReferenceTerm().getConceptSource().getHl7Code();
+				String code = map.getConceptReferenceTerm().getCode();
+				if (CODE_SYSTEM_CIEL.equals(hl7Code) && CIEL_CODE_NEW_HIV_CASE.equals(code)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	private boolean isTriggerObs(Obs obs) {
 		Concept c = obs.getConcept();
 		for (ConceptMap map : c.getConceptMappings()) {
@@ -106,6 +131,7 @@ public class EncounterProcessor {
 				return true;
 			}
 		}
+		
 		return false;
 	}
 	
