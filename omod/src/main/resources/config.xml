@@ -58,7 +58,7 @@
         <description>
             Specifies the name of the encounter type to use for encounters created whenever a public health
             case report is received, the value MUST match the name (last) field of the configured value for the
-            global property named &lt;t&gt;casereport.publicHealthCaseReportConcept&lt;/t&gt; in the submitting
+            global property named casereport.publicHealthCaseReportConcept in the submitting
             OpenMRS instance(s), there is an assumption that the same concept was set in all the submitting OpenMRS
             instances in case of more than one.
         </description>
@@ -122,17 +122,17 @@
         </description>
     </globalProperty>
     <globalProperty>
-        <property>${project.parent.artifactId}.maleOptionUID</property>
+        <property>${project.parent.artifactId}.maleOptionCode</property>
         <defaultValue>1</defaultValue>
         <description>
-            The UID of the male option in the DHIS2 instance
+            The code of the male option in the DHIS2 instance
         </description>
     </globalProperty>
     <globalProperty>
-        <property>${project.parent.artifactId}.femaleOptionUID</property>
+        <property>${project.parent.artifactId}.femaleOptionCode</property>
         <defaultValue>2</defaultValue>
         <description>
-            The UID of the female option in the DHIS2 instance
+            The code of the female option in the DHIS2 instance
         </description>
     </globalProperty>
     <globalProperty>
