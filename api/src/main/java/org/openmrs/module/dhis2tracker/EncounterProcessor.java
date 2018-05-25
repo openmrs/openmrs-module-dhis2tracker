@@ -80,6 +80,8 @@ public class EncounterProcessor {
 				log.error("Failed to register and enroll the patient with id " + patient.getId() + " in DHIS2");
 				return false;
 			}
+		} else {
+			log.debug("Patient with id " + patient.getId() + " is already registered and enrolled in DHIS2");
 		}
 		
 		return true;
