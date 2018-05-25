@@ -9,16 +9,18 @@
  */
 package org.openmrs.module.dhis2tracker;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static org.openmrs.module.dhis2tracker.ProcessorResult.IGNORED;
+import static org.openmrs.module.dhis2tracker.ProcessorResult.PASSED;
 
 import java.io.IOException;
 
 import javax.jms.MapMessage;
 
 import org.apache.activemq.command.ActiveMQMapMessage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +56,7 @@ public class CaseReportEventListenerTest {
 		PowerMockito.mockStatic(Context.class);
 		PowerMockito.mockStatic(EncounterProcessor.class);
 		when(EncounterProcessor.newInstance()).thenReturn(ep);
-		when(ep.process(any(Encounter.class))).thenReturn(true);
+		when(ep.process(any(Encounter.class))).thenReturn(PASSED);
 		when(Context.getAdministrationService()).thenReturn(as);
 		when(Context.getEncounterService()).thenReturn(es);
 		final String conceptAndEncounterTypeName = "Public health Case report";
@@ -74,7 +76,7 @@ public class CaseReportEventListenerTest {
 		
 		MapMessage message = new ActiveMQMapMessage();
 		message.setString("uuid", enc.getUuid());
-		Assert.assertTrue(listener.processMessage(message));
+		assertEquals(PASSED, listener.processMessage(message));
 	}
 	
 	@Test
@@ -87,7 +89,7 @@ public class CaseReportEventListenerTest {
 		
 		MapMessage message = new ActiveMQMapMessage();
 		message.setString("uuid", enc.getUuid());
-		Assert.assertFalse(listener.processMessage(message));
+		assertEquals(IGNORED, listener.processMessage(message));
 	}
 	
 }

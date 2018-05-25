@@ -12,10 +12,10 @@ package org.openmrs.module.dhis2tracker;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PERSON_ATTRIBUTE_TYPE_UUID;
+import static org.openmrs.module.dhis2tracker.ProcessorResult.PASSED;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class EncounterProcessorTest {
 		//when(dhis2HttpClient.sendEvents(argThat(new ListMatcher(events)))).thenReturn(true);
 		
 		assertNull(p.getAttribute(uidAttribType));
-		assertTrue(processor.process(e));
+		assertEquals(PASSED, processor.process(e));
 		assertEquals(expectedUid, p.getAttribute(uidAttribType).getValue());
 	}
 	
@@ -153,7 +153,7 @@ public class EncounterProcessorTest {
 		//when(dhis2HttpClient.sendEvents(argThat(new ListMatcher(events)))).thenReturn(true);
 		
 		assertNotNull(p.getAttribute(uidAttribType));
-		assertTrue(processor.process(e));
+		assertEquals(PASSED, processor.process(e));
 	}
 	
 	private Concept createTriggerConcept() {

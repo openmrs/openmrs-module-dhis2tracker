@@ -47,11 +47,12 @@ public class CaseReportEventListener implements EventListener {
 			public void run() {
 				
 				try {
-				    //TODO in theory we want to save this event to the DB
-                    //before we submit it for tracking purposes and also just in case the
-                    //submission fails we can try again later.
-                    //saveCaseReport();
-					processMessage(message);
+					//TODO in theory we want to save this event to the DB
+					//before we submit it for tracking purposes and also just in case the
+					//submission fails we can try again later.
+					//saveCaseReport();
+					ProcessorResult result = processMessage(message);
+					log.info("Case report processor result: " + result);
 				}
 				catch (Exception e) {
 					log.error("An error occurred while processing case report encounter", e);
@@ -67,26 +68,21 @@ public class CaseReportEventListener implements EventListener {
 	 * Processes the specified JMS message
 	 *
 	 * @param message the message to process
-	 * @return true if the message was processed otherwise false
+	 * @return a {@link ProcessorResult}
 	 * @throws JMSException
 	 */
-	public boolean processMessage(Message message) throws JMSException {
+	public ProcessorResult processMessage(Message message) throws JMSException {
 		log.debug("Processing JMS message");
 		MapMessage mm = (MapMessage) message;
 		String encUuid = mm.getString("uuid");
 		Encounter encounter = Context.getEncounterService().getEncounterByUuid(encUuid);
 		String encTypeName = Dhis2Utils.getCaseReportEncounterTypeName();
-		if (encTypeName.equals(encounter.getEncounterType().getName())) {
-			boolean isSuccess = EncounterProcessor.newInstance().process(encounter);
-			if (!isSuccess) {
-				log.error("Failed to process case report encounter");
-			}
-			return isSuccess;
-		} else {
+		if (!encTypeName.equals(encounter.getEncounterType().getName())) {
 			log.debug("Ignoring non case report encounter");
+			return ProcessorResult.IGNORED;
 		}
 		
-		return false;
+		return EncounterProcessor.newInstance().process(encounter);
 	}
 	
 }

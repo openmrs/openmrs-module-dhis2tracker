@@ -12,6 +12,9 @@ package org.openmrs.module.dhis2tracker;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CIEL_CODE_NEW_HIV_CASE;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CODE_SYSTEM_CIEL;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PERSON_ATTRIBUTE_TYPE_UUID;
+import static org.openmrs.module.dhis2tracker.ProcessorResult.FAILED;
+import static org.openmrs.module.dhis2tracker.ProcessorResult.IGNORED;
+import static org.openmrs.module.dhis2tracker.ProcessorResult.PASSED;
 
 import java.io.IOException;
 
@@ -25,7 +28,6 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
-import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 
@@ -46,19 +48,20 @@ public class EncounterProcessor {
 	 * Processes the specified encounter
 	 *
 	 * @param encounter the encounter to process
-	 * @return true if the encounter was processed successfully otherwise false
+	 * @return a {@link ProcessorResult}
 	 */
-	public boolean process(Encounter encounter) {
+	public ProcessorResult process(Encounter encounter) {
 		log.debug("Processing encounter");
 		if (!hasNewHivCaseEvent(encounter)) {
 			log.debug("Ignoring case report encounter with no new HIV case");
-			return false;
+			return IGNORED;
 		}
 		
 		PersonService ps = Context.getPersonService();
 		PersonAttributeType uidAttributeType = ps.getPersonAttributeTypeByUuid(PERSON_ATTRIBUTE_TYPE_UUID);
 		if (uidAttributeType == null) {
-			throw new APIException("Cannot find person attribute type for dhis2 uid");
+			log.error("Cannot find person attribute type for dhis2 uid");
+			return FAILED;
 		}
 		
 		if (dhis2HttpClient == null) {
@@ -75,16 +78,17 @@ public class EncounterProcessor {
 				String patientUid = dhis2HttpClient.registerAndEnroll(data);
 				patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
 				ps.savePerson(patient);
+				return PASSED;
 			}
 			catch (IOException e) {
-				log.error("Failed to register and enroll the patient with id " + patient.getId() + " in DHIS2");
-				return false;
+				log.error("Failed to register and enroll the patient with id " + patient.getId() + " in DHIS2", e);
 			}
 		} else {
 			log.debug("Patient with id " + patient.getId() + " is already registered and enrolled in DHIS2");
+			return IGNORED;
 		}
 		
-		return true;
+		return FAILED;
 		
 		//TODO look up trigger concept GP
 		/*List<TriggerEvent> events = new ArrayList<>();
@@ -98,10 +102,14 @@ public class EncounterProcessor {
 		
 		try {
 			String data = Dhis2Utils.buildEventsContent(encounter.getObs());
-			return dhis2HttpClient.sendEvents(data);
+			boolean success = dhis2HttpClient.sendEvents(data);
+			if(!success){
+			    log.error("Send of events to DHIS2 was not successful");
+			}
+			return success;
 		}
 		catch (IOException e) {
-			log.error("Failed to submit event(s) to DHIS2 for patient with id: " + patient.getId());
+			log.error("Failed to submit event(s) to DHIS2 for patient with id: " + patient.getId(), e);
 			return false;
 		}*/
 	}

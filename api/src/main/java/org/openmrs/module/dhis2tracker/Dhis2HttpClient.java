@@ -71,10 +71,7 @@ public class Dhis2HttpClient {
 	 */
 	public boolean sendEvents(String data) throws IOException {
 		Dhis2Response response = post(RESOURCE_EVENTS, data, false);
-		if (!isSuccessful(response)) {
-			throw new APIException("Send of events to DHIS2 was not successful");
-		}
-		return true;
+		return isSuccessful(response);
 	}
 	
 	public Dhis2Response post(String resource, String jsonContent, boolean isRegistration) throws IOException {
