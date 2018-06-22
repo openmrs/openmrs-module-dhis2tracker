@@ -9,7 +9,7 @@
  */
 package org.openmrs.module.dhis2tracker;
 
-import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DHIS2_CODE_ATTRIB_TYPE_UUID;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,9 +82,9 @@ public class Dhis2Utils {
 	
 	public static String getOrgUnitCode(Location location) {
 		LocationService ls = Context.getLocationService();
-		LocationAttributeType lat = ls.getLocationAttributeTypeByName(EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME);
+		LocationAttributeType lat = ls.getLocationAttributeTypeByUuid(DHIS2_CODE_ATTRIB_TYPE_UUID);
 		if (lat == null) {
-			throw new APIException("No location attribute type with name: " + EXTERNAL_ID_LOCATION_ATTRIB_TYPE_NAME);
+			throw new APIException("No location attribute type with uuid: " + DHIS2_CODE_ATTRIB_TYPE_UUID);
 		}
 		for (LocationAttribute la : location.getActiveAttributes()) {
 			if (lat.equals(la.getAttributeType())) {
@@ -92,7 +92,7 @@ public class Dhis2Utils {
 			}
 		}
 		
-		throw new APIException("Case report source location has no external Id attribute");
+		throw new APIException("Case report source location is not mapped to a DHIS2 organisation unit");
 	}
 	
 	public static String getTrackedEntityTypeUID() {

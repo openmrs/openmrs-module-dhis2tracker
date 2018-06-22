@@ -40,4 +40,42 @@
         </insert>
     </changeSet>
 
+    <changeSet id="${project.parent.artifactId}-20180621-1605" author="Wyclif">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM location_attribute_type WHERE uuid = '66bfca6e-75af-11e8-a395-ec86dab4f7b9'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding DHIS2 Code location attribute type</comment>
+        <insert tableName="location_attribute_type">
+            <column name="name" value="DHIS2 Code" />
+            <column name="description" value="The code of the organisation unit in the DHIS2 instance that maps to the location" />
+            <column name="datatype" value="org.openmrs.customdatatype.datatype.FreeTextDatatype" />
+            <column name="min_occurs" value="0" />
+            <column name="max_occurs" value="1" />
+            <column name="creator" valueNumeric="1" />
+            <column name="date_created" valueDate="2018-06-21" />
+            <column name="uuid" value="66bfca6e-75af-11e8-a395-ec86dab4f7b9" />
+        </insert>
+    </changeSet>
+
+    <changeSet id="${project.parent.artifactId}-20180621-1610" author="Wyclif">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM location_attribute_type WHERE name = 'ExternalId'
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding DHIS2 Code location attribute type</comment>
+        <insert tableName="location_attribute_type">
+            <column name="name" value="ExternalId" />
+            <column name="description" value="The HIE external code of the location" />
+            <column name="datatype" value="org.openmrs.customdatatype.datatype.FreeTextDatatype" />
+            <column name="min_occurs" value="0" />
+            <column name="max_occurs" value="1" />
+            <column name="creator" valueNumeric="1" />
+            <column name="date_created" valueDate="2018-06-21" />
+            <column name="uuid" value="c54ee8f6-75b6-11e8-a395-ec86dab4f7b9" />
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
