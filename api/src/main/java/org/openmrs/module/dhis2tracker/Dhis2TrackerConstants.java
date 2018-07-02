@@ -29,8 +29,10 @@ public class Dhis2TrackerConstants {
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	
 	public static final String CONTENT_TYPE_XML = "application/xml";
+
+    public static final String CODE_SYSTEM_CIEL = "2.16.840.1.113883.3.7201";
 	
-	public static final String CODE_SYSTEM_CIEL = "2.16.840.1.113883.3.7201";
+	public static final String CODE_SYSTEM_NAME_CIEL = "CIEL";
 	
 	public static final String DHIS2_CODE_ATTRIB_TYPE_UUID = "66bfca6e-75af-11e8-a395-ec86dab4f7b9";
 	

@@ -108,14 +108,14 @@
         </description>
     </globalProperty>
     <globalProperty>
-        <property>${project.parent.artifactId}.lastnameAttributeUID</property>
+        <property>${project.parent.artifactId}.lastnameUID</property>
         <defaultValue>kvkIr4Etq09</defaultValue>
         <description>
             The UID of the last name tracked entity attribute in the DHIS2 instance
         </description>
     </globalProperty>
     <globalProperty>
-        <property>${project.parent.artifactId}.genderAttributeUID</property>
+        <property>${project.parent.artifactId}.genderUID</property>
         <defaultValue>ygL42trGhmu</defaultValue>
         <description>
             The UID of the gender tracked entity attribute in the DHIS2 instance

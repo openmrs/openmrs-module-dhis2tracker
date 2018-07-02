@@ -11,6 +11,7 @@ package org.openmrs.module.dhis2tracker;
 
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CIEL_CODE_NEW_HIV_CASE;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CODE_SYSTEM_CIEL;
+import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CODE_SYSTEM_NAME_CIEL;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PERSON_ATTRIBUTE_TYPE_UUID;
 import static org.openmrs.module.dhis2tracker.ProcessorResult.FAILED;
 import static org.openmrs.module.dhis2tracker.ProcessorResult.IGNORED;
@@ -126,8 +127,10 @@ public class EncounterProcessor {
 			}
 			for (ConceptMap map : codedValue.getConceptMappings()) {
 				String hl7Code = map.getConceptReferenceTerm().getConceptSource().getHl7Code();
+				String name = map.getConceptReferenceTerm().getConceptSource().getName();
 				String code = map.getConceptReferenceTerm().getCode();
-				if (CODE_SYSTEM_CIEL.equals(hl7Code) && CIEL_CODE_NEW_HIV_CASE.equals(code)) {
+				if ((CODE_SYSTEM_CIEL.equals(hl7Code) || CODE_SYSTEM_NAME_CIEL.equals(name))
+				        && CIEL_CODE_NEW_HIV_CASE.equals(code)) {
 					return true;
 				}
 			}
