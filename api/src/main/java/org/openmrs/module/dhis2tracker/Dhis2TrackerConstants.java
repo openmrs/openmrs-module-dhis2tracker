@@ -61,9 +61,9 @@ public class Dhis2TrackerConstants {
 	
 	public static final String GP_ATTRIB_MIDDLENAME_UID = MODULE_ID + ".middlenameUID";
 	
-	public static final String GP_ATTRIB_LASTNAME_UID = MODULE_ID + ".lastnameAttributeUID";
+	public static final String GP_ATTRIB_LASTNAME_UID = MODULE_ID + ".lastnameUID";
 	
-	public static final String GP_ATTRIB_GENDER_UID = MODULE_ID + ".genderAttributeUID";
+	public static final String GP_ATTRIB_GENDER_UID = MODULE_ID + ".genderUID";
 	
 	public static final String GP_ATTRIB_BIRTHDATE_UID = MODULE_ID + ".birthdateUID";
 	

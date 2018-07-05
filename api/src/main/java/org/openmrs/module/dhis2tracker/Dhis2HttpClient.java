@@ -58,7 +58,7 @@ public class Dhis2HttpClient {
 		if (!isSuccessful(response)) {
 			throw new APIException("Registration of patient was not successful");
 		}
-		log.debug("Extracting generated the UID of the registered patient");
+		log.debug("Extracting generated UID of the registered patient");
 		
 		return response.getResponse().getImportSummaries().get(0).getReference();
 	}

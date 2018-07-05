@@ -38,7 +38,9 @@ public class Dhis2Utils {
 		List<Attribute> attributes = new ArrayList<>();
 		attributes.add(new Attribute(getPersonIdUID(), patient.getPatientIdentifier().getIdentifier()));
 		attributes.add(new Attribute(getFirstnameUID(), patient.getGivenName()));
-		attributes.add(new Attribute(getMiddlenameUID(), patient.getMiddleName()));
+		if (patient.getMiddleName() != null) {
+			attributes.add(new Attribute(getMiddlenameUID(), patient.getMiddleName()));
+		}
 		attributes.add(new Attribute(getLastnameUID(), patient.getFamilyName()));
 		attributes
 		        .add(new Attribute(getBirthdateUID(), Dhis2TrackerConstants.DATE_FORMATTER.format(patient.getBirthdate())));
