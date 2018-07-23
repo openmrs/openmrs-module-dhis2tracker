@@ -76,11 +76,13 @@ public class CaseReportEventListener implements EventListener {
 		MapMessage mm = (MapMessage) message;
 		String encUuid = mm.getString("uuid");
 		Encounter encounter = Context.getEncounterService().getEncounterByUuid(encUuid);
-		String encTypeName = Dhis2Utils.getCaseReportEncounterTypeName();
-		if (!encTypeName.equals(encounter.getEncounterType().getName())) {
-			log.debug("Ignoring non case report encounter");
+		String caseReportEncType = Dhis2Utils.getCaseReportEncounterTypeName();
+		String encTypeName = encounter.getEncounterType().getName();
+		if (!caseReportEncType.equals(encTypeName)) {
+			log.debug("Ignoring non case report encounter with encounter type: " + encTypeName);
 			return ProcessorResult.IGNORED;
 		}
+		log.debug("Processing case report encounter with encounter type: " + encTypeName);
 		
 		return EncounterProcessor.newInstance().process(encounter);
 	}
