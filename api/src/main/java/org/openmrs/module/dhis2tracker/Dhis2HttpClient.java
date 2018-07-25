@@ -17,8 +17,6 @@ import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.HEADER_CONTE
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.PARAMS_ID_SCHEMES;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -95,10 +93,7 @@ public class Dhis2HttpClient {
 			return httpclient.execute(post, new Dhis2ResponseHandler());
 		}
 		catch (IOException e) {
-			log.error("An error occurred while submitting data to dhi2tracker");
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			log.error(sw.toString());
+			log.error("An error occurred while submitting data to dhi2tracker", e);
 			throw e;
 		}
 		finally {
