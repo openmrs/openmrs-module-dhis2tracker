@@ -181,9 +181,7 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		executeDataSet("moduleTestData-initial.xml");
 		setDhis2Port(DHIS2_PORT);
 		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, SUCCESS_FAILED_ENROLL);
-		ee.expect(APIException.class);
-		ee.expectMessage(equalTo("Enrollment passed even though the patient might have been registered in DHIS2"));
-		dhis2HttpClient.registerAndEnroll("json data");
+		assertEquals("k8kD3WnJCOC", dhis2HttpClient.registerAndEnroll("json data"));
 	}
 	
 	@Test

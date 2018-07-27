@@ -78,6 +78,7 @@ public class EncounterProcessor {
 			//Register and enroll the patient in the program
 			try {
 				String data = Dhis2Utils.buildRegisterAndEnrollContent(encounter);
+				//Changed response here to combo of status and uuid
 				String patientUid = dhis2HttpClient.registerAndEnroll(data);
 				patient.addAttribute(new PersonAttribute(uidAttributeType, patientUid));
 				ps.savePerson(patient);

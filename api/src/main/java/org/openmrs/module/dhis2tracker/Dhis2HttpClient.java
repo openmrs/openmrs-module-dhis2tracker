@@ -72,22 +72,18 @@ public class Dhis2HttpClient {
 		ResponseResult result = getResult(response);
 		String errorMsg = null;
 		switch (result) {
-			case SUCCESS:
-				break;
 			case SUCCESS_CONFLICTS:
 				errorMsg = "Registration failed because of some conflict(s)";
-				break;
-			case SUCCESS_FAILED_ENROLL:
-				errorMsg = "Enrollment passed even though the patient might have been registered in DHIS2";
 				break;
 			case FAILURE:
 				errorMsg = "Registration of patient failed";
 				break;
 		}
 		
-		if (result != SUCCESS) {
+		if (result != SUCCESS && result != SUCCESS_FAILED_ENROLL) {
 			throw new APIException(errorMsg);
 		}
+		
 		log.debug("Extracting generated UID of the registered patient");
 		
 		return response.getResponse().getImportSummaries().get(0).getReference();
@@ -154,6 +150,7 @@ public class Dhis2HttpClient {
 			ImportSummary enrollments = importResp.getImportSummaries().get(0).getEnrollments();
 			ImportSummary enrollSummary = enrollments.getImportSummaries().get(0);
 			if (STATUS_ERROR.equals(enrollments.getStatus()) || STATUS_ERROR.equals(enrollSummary.getStatus())) {
+				log.warn("Enrollment failed even though the patient might have been registered in DHIS2");
 				List<Conflict> enrollConflicts = enrollSummary.getConflicts();
 				if (CollectionUtils.isNotEmpty(enrollConflicts)) {
 					log.error(StringUtils.join(enrollConflicts, ", "));
@@ -163,7 +160,7 @@ public class Dhis2HttpClient {
 			return SUCCESS;
 		}
 		
-		throw new APIException("There was an unknown problem in DHIS2 when registering and enrolling the patient ");
+		throw new APIException("There was an unknown problem in DHIS2 when registering and enrolling the patient");
 	}
 	
 }
