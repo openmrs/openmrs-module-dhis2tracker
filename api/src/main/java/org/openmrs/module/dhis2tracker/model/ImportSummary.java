@@ -18,6 +18,8 @@ public class ImportSummary {
 	
 	public static final String STATUS_SUCCESS = "SUCCESS";
 	
+	public static final String STATUS_ERROR = "ERROR";
+	
 	private String status;
 	
 	private String reference;
@@ -25,6 +27,8 @@ public class ImportSummary {
 	private ImportSummary enrollments;
 	
 	private List<ImportSummary> importSummaries;
+	
+	private List<Conflict> conflicts;
 	
 	public String getStatus() {
 		return status;
@@ -56,6 +60,14 @@ public class ImportSummary {
 	
 	public void setImportSummaries(List<ImportSummary> importSummaries) {
 		this.importSummaries = importSummaries;
+	}
+	
+	public List<Conflict> getConflicts() {
+		return conflicts;
+	}
+	
+	public void setConflicts(List<Conflict> conflicts) {
+		this.conflicts = conflicts;
 	}
 	
 }

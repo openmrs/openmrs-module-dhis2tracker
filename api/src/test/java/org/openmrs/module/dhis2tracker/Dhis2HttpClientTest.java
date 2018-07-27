@@ -10,7 +10,13 @@
 package org.openmrs.module.dhis2tracker;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.openmrs.module.dhis2tracker.Dhis2HttpClient.ResponseResult;
+import static org.openmrs.module.dhis2tracker.Dhis2HttpClient.ResponseResult.FAILURE;
+import static org.openmrs.module.dhis2tracker.Dhis2HttpClient.ResponseResult.SUCCESS;
+import static org.openmrs.module.dhis2tracker.Dhis2HttpClient.ResponseResult.SUCCESS_CONFLICTS;
+import static org.openmrs.module.dhis2tracker.Dhis2HttpClient.ResponseResult.SUCCESS_FAILED_ENROLL;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE_JSON;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.CONTENT_TYPE_XML;
 import static org.openmrs.module.dhis2tracker.Dhis2TrackerConstants.DATE_FORMATTER;
@@ -30,6 +36,7 @@ import org.apache.http.HttpStatus;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.Encounter;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
@@ -51,13 +58,20 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 	
 	private static final String SUCCESS_RESPONSE_REGISTER = "success_response_register.json";
 	
-	private static final String SUCCESS_RESPONSE_EVENT = "success_response_event.json";
-	
 	private static final String FAILURE_RESPONSE_REGISTER = "failure_response_register.json";
+	
+	private static final String SUCCESS_RESPONSE_CONFLICT = "success_response_conflict.json";
+	
+	private static final String SUCCESS_RESPONSE_FAIL_ENROLL = "success_response_fail_enroll.json";
+	
+	private static final String SUCCESS_RESPONSE_EVENT = "success_response_event.json";
 	
 	private static final String FAILURE_RESPONSE_EVENT = "failure_response_event.json";
 	
 	private Dhis2HttpClient dhis2HttpClient = Dhis2HttpClient.newInstance();
+	
+	@Rule
+	public ExpectedException ee = ExpectedException.none();
 	
 	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(DHIS2_PORT);
@@ -85,28 +99,39 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		as.saveGlobalProperty(gp);
 	}
 	
-	public static String getResponse(boolean isRegistration, boolean success) throws IOException {
-		String filename;
+	public static String getResponse(boolean isRegistration, Dhis2HttpClient.ResponseResult respType) throws IOException {
+		String filename = null;
 		if (isRegistration) {
-			filename = success ? SUCCESS_RESPONSE_REGISTER : FAILURE_RESPONSE_REGISTER;
+			switch (respType) {
+				case SUCCESS:
+					filename = SUCCESS_RESPONSE_REGISTER;
+					break;
+				case FAILURE:
+					filename = FAILURE_RESPONSE_REGISTER;
+					break;
+				case SUCCESS_CONFLICTS:
+					filename = SUCCESS_RESPONSE_CONFLICT;
+					break;
+				case SUCCESS_FAILED_ENROLL:
+					filename = SUCCESS_RESPONSE_FAIL_ENROLL;
+					break;
+			}
 		} else {
-			filename = success ? SUCCESS_RESPONSE_EVENT : FAILURE_RESPONSE_EVENT;
+			//filename = success ? SUCCESS_RESPONSE_EVENT : FAILURE_RESPONSE_EVENT;
 		}
 		return IOUtils.toString(OpenmrsClassLoader.getInstance().getResourceAsStream(filename));
 	}
 	
-	public static void createPostStub(String resource, boolean isRegistration, boolean withSuccessResponse)
-	    throws IOException {
+	public static void createPostStub(String resource, boolean isRegistration, ResponseResult respType) throws IOException {
 		
-		final int sc = withSuccessResponse ? HttpStatus.SC_OK : HttpStatus.SC_INTERNAL_SERVER_ERROR;
+		final int sc = (respType == FAILURE) ? HttpStatus.SC_CONFLICT : HttpStatus.SC_OK;
 		final String contentType = isRegistration ? CONTENT_TYPE_JSON : CONTENT_TYPE_XML;
 		WireMock.stubFor(WireMock.post(WireMock.urlEqualTo("/" + resource + "?" + PARAMS_ID_SCHEMES))
 		        .withHeader(HEADER_ACCEPT, containing(CONTENT_TYPE_JSON))
 		        .withHeader(HEADER_CONTENT_TYPE, containing(contentType))
 		        //.withRequestBody(containing(""))
-		        .withBasicAuth("fake user", "fake password")
-		        .willReturn(WireMock.aResponse().withStatus(sc).withHeader("Content-Type", CONTENT_TYPE_JSON)
-		                .withBody(getResponse(isRegistration, withSuccessResponse))));
+		        .withBasicAuth("fake user", "fake password").willReturn(WireMock.aResponse().withStatus(sc)
+		                .withHeader("Content-Type", CONTENT_TYPE_JSON).withBody(getResponse(isRegistration, respType))));
 	}
 	
 	@Test
@@ -120,7 +145,7 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		p.setBirthdate(DATE_FORMATTER.parse("1980-04-20"));
 		Date incidenceDate = DATE_FORMATTER.parse("2018-04-21");
 		setDhis2Port(DHIS2_PORT);
-		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, true);
+		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, SUCCESS);
 		Encounter e = new Encounter();
 		Location location = Context.getLocationService().getLocation(200);
 		e.setPatient(p);
@@ -129,6 +154,36 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		String json = Dhis2Utils.buildRegisterAndEnrollContent(e);
 		String uid = dhis2HttpClient.registerAndEnroll(json);
 		assertEquals(expectedUid, uid);
+	}
+	
+	@Test
+	public void registerAndEnroll_shouldReportAnErrorInCaseOfFailure() throws Exception {
+		executeDataSet("moduleTestData-initial.xml");
+		setDhis2Port(DHIS2_PORT);
+		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, FAILURE);
+		ee.expect(APIException.class);
+		ee.expectMessage(equalTo("Registration of patient failed"));
+		dhis2HttpClient.registerAndEnroll("Some data");
+	}
+	
+	@Test
+	public void registerAndEnroll_shouldReportAnErrorInCaseOfConflicts() throws Exception {
+		executeDataSet("moduleTestData-initial.xml");
+		setDhis2Port(DHIS2_PORT);
+		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, SUCCESS_CONFLICTS);
+		ee.expect(APIException.class);
+		ee.expectMessage(equalTo("Registration failed because of some conflict(s)"));
+		dhis2HttpClient.registerAndEnroll("json data");
+	}
+	
+	@Test
+	public void registerAndEnroll_shouldReportAnErrorIfTheEnrollmentFails() throws Exception {
+		executeDataSet("moduleTestData-initial.xml");
+		setDhis2Port(DHIS2_PORT);
+		createPostStub(Dhis2HttpClient.RESOURCE_TRACKED_ENTITY_INSTANCES, true, SUCCESS_FAILED_ENROLL);
+		ee.expect(APIException.class);
+		ee.expectMessage(equalTo("Enrollment passed even though the patient might have been registered in DHIS2"));
+		dhis2HttpClient.registerAndEnroll("json data");
 	}
 	
 	@Test
@@ -148,7 +203,7 @@ public class Dhis2HttpClientTest extends BaseModuleContextSensitiveTest {
 		newDiseaseEvent.setDate(encDate);
 		events.add(newDiseaseEvent);
 		setDhis2Port(DHIS2_PORT);
-		createPostStub(Dhis2HttpClient.RESOURCE_EVENTS, false, true);
+		createPostStub(Dhis2HttpClient.RESOURCE_EVENTS, false, SUCCESS);
 		
 		//assertTrue(dhis2HttpClient.sendEvents(events));
 	}
