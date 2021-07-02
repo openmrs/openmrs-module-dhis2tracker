@@ -40,7 +40,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <eventVersion>2.6.0</eventVersion>
         <geronomicsVersion>1.1.1</geronomicsVersion>
-        <httpClientVersion>4.5.5</httpClientVersion>
+        <httpClientVersion>4.5.13</httpClientVersion>
         <wiremockVersion>2.5.1</wiremockVersion>
 	</properties>
 
